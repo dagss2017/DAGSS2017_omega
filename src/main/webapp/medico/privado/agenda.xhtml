@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+
+        <ui:composition template="/plantillas/plantillaComun.xhtml">
+
+            <ui:define name="tituloPagina">
+                <h2>  Pagina principal de Médicos </h2>
+            </ui:define>            
+
+            <ui:define name="menu">
+                <ui:include src="/plantillas/menuComun.xhtml"/>
+            </ui:define>
+
+            <ui:define name="contenido">
+                <h:form>
+                    <b:dataTable value="#{medicoControlador.citas}"
+                                 var="cita">
+                        <b:dataTableColumn value="#{cita.paciente.nombre} #{cita.paciente.apellidos}" />
+                        <b:dataTableColumn value="#{cita.fecha}" />
+                        <b:dataTableColumn value="#{cita.hora}" />
+                        <b:dataTableColumn value="#{cita.duracion}" />
+                        <b:dataTableColumn value="#{cita.estado}" >
+                             <!--<c:if test="#{cita.estado}.equals('PLANIFICADA')" ><b:button look="info" value="Detalle" /></c:if>-->
+                            <b:button look="info" value="Detalle" rendered="#{cita.estado=='ANULADA'}" />
+                        </b:dataTableColumn>
+                    </b:dataTable>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>
+
+
+
