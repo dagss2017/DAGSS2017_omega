@@ -25,6 +25,10 @@
                     <b:dataTable value="#{medicoControlador.citas}"
                                  var="cita">
                         
+                        <b:dataTableColumn label="#cita"> 
+                            <h:outputText value ="#{cita.id}"/>
+                        </b:dataTableColumn>
+                        
                         <b:dataTableColumn label="Apellidos y nombre"> 
                             <h:outputText value ="#{cita.paciente.nombre} #{cita.paciente.apellidos}"/>
                         </b:dataTableColumn>
@@ -43,11 +47,24 @@
                         
                         <b:dataTableColumn value="#{cita.duracion}" />
                         
-                        <b:dataTableColumn value="#{cita.estado}" >
-                             <!--<c:if test="#{cita.estado}.equals('PLANIFICADA')" ><b:button look="info" value="Detalle" /></c:if>-->
-                            <b:button look="info" value="Detalle" rendered="#{cita.estado=='ANULADA'}" />
-                        </b:dataTableColumn>
+                        <b:dataTableColumn value="#{cita.estado}" />
+                          
                         
+                        <b:dataTableColumn label="Acción"> 
+                              <!-- <b:button look="info" value="Atender" rendered="#{cita.estado=='PLANIFICADA'}" /> -->
+                            <b:modal id="amodal" title="Formulario de atencion del paciente - Cita: #{cita.id}" styleClass="#{cita.id}">
+                                 <p>Me gustan los paseos por la playa.</p>
+                                 <f:facet name="footer">
+                                     <b:button value="Close" dismiss="modal" />
+                                     <b:button value="Ok" look="primary" dismiss="modal" />
+                                 </f:facet>
+                            </b:modal>
+                             <b:row>
+                                 <b:column span="3">
+                                     <b:button value="Atender" look="info" onclick="$('.#{cita.id}').modal()" size="sm"/>
+                                 </b:column>
+                             </b:row>
+                         </b:dataTableColumn>
                     </b:dataTable>
                 </h:form>
             </ui:define>
