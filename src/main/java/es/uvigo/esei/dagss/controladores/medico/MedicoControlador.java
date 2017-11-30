@@ -12,6 +12,7 @@ import es.uvigo.esei.dagss.dominio.entidades.TipoUsuario;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -127,7 +128,11 @@ public class MedicoControlador implements Serializable {
     }
     
     public void recuperarCitasMedico() {
-        citas = citaDAO.buscarPorMedico(medicoActual);
+        Date fechaActual = new Date();
+        
+        if (citaDAO.buscarPorMedico(medicoActual,fechaActual) != null) {
+            citas = citaDAO.buscarPorMedico(medicoActual,fechaActual);
+        }
     }
 
     //Acciones

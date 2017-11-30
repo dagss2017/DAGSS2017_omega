@@ -24,14 +24,30 @@
                 <h:form>
                     <b:dataTable value="#{medicoControlador.citas}"
                                  var="cita">
-                        <b:dataTableColumn value="#{cita.paciente.nombre} #{cita.paciente.apellidos}" />
-                        <b:dataTableColumn value="#{cita.fecha}" />
-                        <b:dataTableColumn value="#{cita.hora}" />
+                        
+                        <b:dataTableColumn label="Apellidos y nombre"> 
+                            <h:outputText value ="#{cita.paciente.nombre} #{cita.paciente.apellidos}"/>
+                        </b:dataTableColumn>
+                        
+                        <b:dataTableColumn label="Fecha"> 
+                          <h:outputText value="#{cita.fecha}" >
+                            <f:convertDateTime pattern="d-M-yyyy" />
+                          </h:outputText>
+                        </b:dataTableColumn>
+                        
+                        <b:dataTableColumn label = "Hora"> 
+                            <h:outputText value="#{cita.hora}">
+                                <f:convertDateTime pattern="h:mm a"/>
+                            </h:outputText>
+                        </b:dataTableColumn>
+                        
                         <b:dataTableColumn value="#{cita.duracion}" />
+                        
                         <b:dataTableColumn value="#{cita.estado}" >
                              <!--<c:if test="#{cita.estado}.equals('PLANIFICADA')" ><b:button look="info" value="Detalle" /></c:if>-->
                             <b:button look="info" value="Detalle" rendered="#{cita.estado=='ANULADA'}" />
                         </b:dataTableColumn>
+                        
                     </b:dataTable>
                 </h:form>
             </ui:define>
