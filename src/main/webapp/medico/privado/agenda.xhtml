@@ -13,7 +13,7 @@
         <ui:composition template="/plantillas/plantillaComun.xhtml">
 
             <ui:define name="tituloPagina">
-                <h2>  Pagina principal de Médicos </h2>
+                <h2>  Agenda de citas para hoy </h2>
             </ui:define>            
 
             <ui:define name="menu">
@@ -51,17 +51,9 @@
                           
                         
                         <b:dataTableColumn label="Acción"> 
-                              <!-- <b:button look="info" value="Atender" rendered="#{cita.estado=='PLANIFICADA'}" /> -->
-                            <b:modal id="amodal" title="Formulario de atencion del paciente - Cita: #{cita.id}" styleClass="#{cita.id}">
-                                 <p>Me gustan los paseos por la playa.</p>
-                                 <f:facet name="footer">
-                                     <b:button value="Close" dismiss="modal" />
-                                     <b:button value="Ok" look="primary" dismiss="modal" />
-                                 </f:facet>
-                            </b:modal>
                              <b:row>
                                  <b:column span="3">
-                                     <b:button value="Atender" look="info" onclick="$('.#{cita.id}').modal()" size="sm"/>
+                                     <b:commandButton value="Atender" action="#{medicoControlador.doShowCita(cita)}" look="info" size="sm" rendered="#{cita.estado=='PLANIFICADA'}"/>
                                  </b:column>
                              </b:row>
                          </b:dataTableColumn>

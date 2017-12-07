@@ -6,8 +6,10 @@ package es.uvigo.esei.dagss.controladores.medico;
 import es.uvigo.esei.dagss.controladores.autenticacion.AutenticacionControlador;
 import es.uvigo.esei.dagss.dominio.daos.CitaDAO;
 import es.uvigo.esei.dagss.dominio.daos.MedicoDAO;
+import es.uvigo.esei.dagss.dominio.daos.PrescripcionDAO;
 import es.uvigo.esei.dagss.dominio.entidades.Cita;
 import es.uvigo.esei.dagss.dominio.entidades.Medico;
+import es.uvigo.esei.dagss.dominio.entidades.Prescripcion;
 import es.uvigo.esei.dagss.dominio.entidades.TipoUsuario;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -33,6 +35,7 @@ public class MedicoControlador implements Serializable {
     private String numeroColegiado;
     private String password;
     private List<Cita> citas;
+    private List<Prescripcion> prescripciones;
 
     @Inject
     private AutenticacionControlador autenticacionControlador;
@@ -42,6 +45,8 @@ public class MedicoControlador implements Serializable {
     private MedicoDAO medicoDAO;
     @EJB
     private CitaDAO citaDAO;
+    @EJB
+    private PrescripcionDAO prescripcionDAO;
 
     /**
      * Creates a new instance of AdministradorControlador
@@ -87,6 +92,14 @@ public class MedicoControlador implements Serializable {
 
     public void setCitas(List<Cita> citas) {
         this.citas = citas;
+    }
+    
+    public List<Prescripcion> getPrescripciones() {
+        return prescripciones;
+    }
+
+    public void setPrescripciones(List<Prescripcion> prescripciones) {
+        this.prescripciones = prescripciones;
     }
 
     private boolean parametrosAccesoInvalidos() {
@@ -136,7 +149,12 @@ public class MedicoControlador implements Serializable {
     }
 
     //Acciones
-    public String doShowCita() {
-        return "detallesCita";
+    public String doShowCita(Cita cita) {
+        // recuperar prescripciones del paciente asociado a la cita
+        List<Prescripcion> listaPrescripciones = prescripcionDAO.buscarPorPaciente(cita.getPaciente().getId());
+        if (listaPrescripciones != null) {
+            prescripciones = listaPrescripciones;
+        }
+        return "/medico/privado/atencion_paciente";
     }
 }
