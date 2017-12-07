@@ -25,16 +25,24 @@
                     <b:dataTable value="#{medicoControlador.prescripciones}"
                                  var="prescripcion">
                         
-                        <b:dataTableColumn label="#prescripcion"> 
-                            <h:outputText value ="#{prescripcion.id}"/>
-                        </b:dataTableColumn>
-                        
                         <b:dataTableColumn label="Medicamento"> 
                             <h:outputText value ="#{prescripcion.medicamento.nombre} "/>
                         </b:dataTableColumn>
                         
-                        <b:dataTableColumn label="Dosis"> 
-                          <h:outputText value="#{prescripcion.medicamento.dosis}" />
+                        <b:dataTableColumn label="Fabricante"> 
+                            <h:outputText value ="#{prescripcion.medicamento.fabricante} "/>
+                        </b:dataTableColumn>
+                        
+                        <b:dataTableColumn label="Principio Activo"> 
+                            <h:outputText value ="#{prescripcion.medicamento.principioActivo} "/>
+                        </b:dataTableColumn>
+                        
+                        <b:dataTableColumn label="Cantidad dosis"> 
+                          <h:outputText value="#{prescripcion.dosis}" />
+                        </b:dataTableColumn>
+                        
+                        <b:dataTableColumn label="Dosis diarias"> 
+                          <h:outputText value="#{prescripcion.medicamento.numeroDosis}" />
                         </b:dataTableColumn>
                         
                         <b:dataTableColumn label="Fecha Inicio"> 
@@ -44,7 +52,7 @@
                         </b:dataTableColumn>
                         
                         <b:dataTableColumn label="Fecha Fin"> 
-                          <h:outputText value="#{prescripcion.fechaInicio}" >
+                          <h:outputText value="#{prescripcion.fechaFin}" >
                             <f:convertDateTime pattern="d-M-yyyy" />
                           </h:outputText>
                         </b:dataTableColumn>
