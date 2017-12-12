@@ -1,0 +1,405 @@
+-- phpMyAdmin SQL Dump
+-- version 4.6.4
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Generation Time: Dec 12, 2017 at 04:42 PM
+-- Server version: 5.7.15-0ubuntu0.16.04.1
+-- PHP Version: 5.6.27-1+deb.sury.org~xenial+1
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `dagss`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ADMINISTRADOR`
+--
+
+CREATE TABLE `ADMINISTRADOR` (
+  `ID` bigint(20) NOT NULL,
+  `FECHAALTA` datetime DEFAULT NULL,
+  `LOGIN` varchar(25) DEFAULT NULL,
+  `NOMBRE` varchar(75) DEFAULT NULL,
+  `PASSWORD` varchar(64) DEFAULT NULL,
+  `TIPO_USUARIO` varchar(20) DEFAULT NULL,
+  `ULTIMOACCESO` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ADMINISTRADOR`
+--
+
+INSERT INTO `ADMINISTRADOR` (`ID`, `FECHAALTA`, `LOGIN`, `NOMBRE`, `PASSWORD`, `TIPO_USUARIO`, `ULTIMOACCESO`) VALUES
+(1, '2017-11-11 01:04:42', 'admin', 'Administrador inicial', 'ggm44T97GWJ6Rryx3do4yvl1bZ+gmUfG', 'ADMINISTRADOR', '2017-11-11 01:04:42');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CENTROSALUD`
+--
+
+CREATE TABLE `CENTROSALUD` (
+  `ID` bigint(20) NOT NULL,
+  `NOMBRE` varchar(50) NOT NULL,
+  `TELEFONO` varchar(9) DEFAULT NULL,
+  `CODIGOPOSTAL` varchar(5) NOT NULL,
+  `DOMICILIO` varchar(75) NOT NULL,
+  `LOCALIDAD` varchar(30) NOT NULL,
+  `PROVINCIA` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `CENTROSALUD`
+--
+
+INSERT INTO `CENTROSALUD` (`ID`, `NOMBRE`, `TELEFONO`, `CODIGOPOSTAL`, `DOMICILIO`, `LOCALIDAD`, `PROVINCIA`) VALUES
+(1, 'Centro salud pepe', '988888888', '12345', 'C/. Pepe, nº 3', 'Ourense', 'Ourense');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CITA`
+--
+
+CREATE TABLE `CITA` (
+  `ID` bigint(20) NOT NULL,
+  `DURACION` int(11) DEFAULT NULL,
+  `ESTADO` varchar(255) DEFAULT NULL,
+  `FECHA` date DEFAULT NULL,
+  `HORA` time DEFAULT NULL,
+  `MEDICO_ID` bigint(20) DEFAULT NULL,
+  `PACIENTE_ID` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `CITA`
+--
+
+INSERT INTO `CITA` (`ID`, `DURACION`, `ESTADO`, `FECHA`, `HORA`, `MEDICO_ID`, `PACIENTE_ID`) VALUES
+(1, 15, 'PLANIFICADA', '2017-11-23', '09:00:00', 2, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `FARMACIA`
+--
+
+CREATE TABLE `FARMACIA` (
+  `ID` bigint(20) NOT NULL,
+  `FECHAALTA` datetime DEFAULT NULL,
+  `NIF` varchar(9) NOT NULL,
+  `NOMBREFARMACIA` varchar(75) NOT NULL,
+  `PASSWORD` varchar(64) DEFAULT NULL,
+  `TIPO_USUARIO` varchar(20) DEFAULT NULL,
+  `ULTIMOACCESO` datetime DEFAULT NULL,
+  `CODIGOPOSTAL` varchar(5) NOT NULL,
+  `DOMICILIO` varchar(75) NOT NULL,
+  `LOCALIDAD` varchar(30) NOT NULL,
+  `PROVINCIA` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `FARMACIA`
+--
+
+INSERT INTO `FARMACIA` (`ID`, `FECHAALTA`, `NIF`, `NOMBREFARMACIA`, `PASSWORD`, `TIPO_USUARIO`, `ULTIMOACCESO`, `CODIGOPOSTAL`, `DOMICILIO`, `LOCALIDAD`, `PROVINCIA`) VALUES
+(4, '2017-11-11 01:04:42', '33333333C', 'Farmacia de prueba', '/QpUw+ZRH3ndoNb3N4gRpT5cz0C7pT9v', 'FARMACIA', '2017-11-11 01:04:42', '12345', 'C/. Farmacia, nº 2, 4º N', 'Coruña', 'Coruña');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `MEDICAMENTO`
+--
+
+CREATE TABLE `MEDICAMENTO` (
+  `ID` bigint(20) NOT NULL,
+  `FABRICANTE` varchar(50) NOT NULL,
+  `FAMILIA` varchar(50) NOT NULL,
+  `NOMBRE` varchar(50) NOT NULL,
+  `NUMERODOSIS` int(11) DEFAULT NULL,
+  `PRINCIPIOACTIVO` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `MEDICAMENTO`
+--
+
+INSERT INTO `MEDICAMENTO` (`ID`, `FABRICANTE`, `FAMILIA`, `NOMBRE`, `NUMERODOSIS`, `PRINCIPIOACTIVO`) VALUES
+(1, 'Bayern', 'Familia de Bayern', 'Hard Drugs', 3, 'Cocaine'),
+(2, 'IbuprofenPRO', 'Familia de IbuprofenPRO', 'DailyIbuprofen 3.0', 2, 'Codeina');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `MEDICO`
+--
+
+CREATE TABLE `MEDICO` (
+  `ID` bigint(20) NOT NULL,
+  `APELLIDOS` varchar(50) NOT NULL,
+  `DNI` varchar(9) NOT NULL,
+  `EMAIL` varchar(25) DEFAULT NULL,
+  `FECHAALTA` datetime DEFAULT NULL,
+  `NOMBRE` varchar(30) NOT NULL,
+  `NUMEROCOLEGIADO` varchar(10) NOT NULL,
+  `PASSWORD` varchar(64) DEFAULT NULL,
+  `TELEFONO` varchar(9) DEFAULT NULL,
+  `TIPO_USUARIO` varchar(20) DEFAULT NULL,
+  `ULTIMOACCESO` datetime DEFAULT NULL,
+  `CENTROSALUD_ID` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `MEDICO`
+--
+
+INSERT INTO `MEDICO` (`ID`, `APELLIDOS`, `DNI`, `EMAIL`, `FECHAALTA`, `NOMBRE`, `NUMEROCOLEGIADO`, `PASSWORD`, `TELEFONO`, `TIPO_USUARIO`, `ULTIMOACCESO`, `CENTROSALUD_ID`) VALUES
+(2, 'Gomez Gomez', '11111111A', 'a@a.com', '2017-11-11 01:04:42', 'Antonio', '11111', 'lUTQ2zg2voe4Z5OqpITFIjcBziNH10d6', '988123456', 'MEDICO', '2017-11-11 01:04:42', 1),
+(4, 'Over', '99999999A', 'bendover@yahoo.com', '1980-12-01 06:16:26', 'Bend', '9999999999', 'lUTQ2zg2voe4Z5OqpITFIjcBziNH10d6', '988264573', 'MEDICO', '2017-12-01 00:00:00', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PACIENTE`
+--
+
+CREATE TABLE `PACIENTE` (
+  `ID` bigint(20) NOT NULL,
+  `APELLIDOS` varchar(50) NOT NULL,
+  `DNI` varchar(9) NOT NULL,
+  `EMAIL` varchar(25) DEFAULT NULL,
+  `FECHAALTA` datetime DEFAULT NULL,
+  `NOMBRE` varchar(30) NOT NULL,
+  `NUMEROSEGURIDADSOCIAL` varchar(13) NOT NULL,
+  `NUMEROTARJETASANITARIA` varchar(10) NOT NULL,
+  `PASSWORD` varchar(64) DEFAULT NULL,
+  `TELEFONO` varchar(9) DEFAULT NULL,
+  `TIPO_USUARIO` varchar(20) DEFAULT NULL,
+  `ULTIMOACCESO` datetime DEFAULT NULL,
+  `CODIGOPOSTAL` varchar(5) NOT NULL,
+  `DOMICILIO` varchar(75) NOT NULL,
+  `LOCALIDAD` varchar(30) NOT NULL,
+  `PROVINCIA` varchar(30) NOT NULL,
+  `MEDICO_ID` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `PACIENTE`
+--
+
+INSERT INTO `PACIENTE` (`ID`, `APELLIDOS`, `DNI`, `EMAIL`, `FECHAALTA`, `NOMBRE`, `NUMEROSEGURIDADSOCIAL`, `NUMEROTARJETASANITARIA`, `PASSWORD`, `TELEFONO`, `TIPO_USUARIO`, `ULTIMOACCESO`, `CODIGOPOSTAL`, `DOMICILIO`, `LOCALIDAD`, `PROVINCIA`, `MEDICO_ID`) VALUES
+(3, 'Benito Carmona', '22222222B', 'b@b.com', '2017-11-11 01:04:42', 'Ana', '2222222222222', '2222222222', 'auJIfVxFAN0IKkDVovGmzfUENiABIC5g', '981123456', 'PACIENTE', '2017-11-11 01:04:42', '12345', 'C/. Benito, nº 2, 4º N', 'Coruña', 'Coruña', 2),
+(5, 'Nitales', '88888888L', 'jorge@outlook.com', '2017-12-03 00:00:00', 'Jorge', '7777777777777', '2222222222', 'auJIfVxFAN0IKkDVovGmzfUENiABIC5g', '977456723', 'PACIENTE', '2017-12-03 04:12:15', '32890', 'Narnia 9, entresuelo A', 'Narnia town', 'Narnia', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PRESCRIPCION`
+--
+
+CREATE TABLE `PRESCRIPCION` (
+  `ID` bigint(20) NOT NULL,
+  `DOSIS` int(11) DEFAULT NULL,
+  `FECHAFIN` date DEFAULT NULL,
+  `FECHAINICIO` date DEFAULT NULL,
+  `INDICACIONES` varchar(255) DEFAULT NULL,
+  `MEDICAMENTO_ID` bigint(20) DEFAULT NULL,
+  `MEDICO_ID` bigint(20) DEFAULT NULL,
+  `PACIENTE_ID` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `PRESCRIPCION`
+--
+
+INSERT INTO `PRESCRIPCION` (`ID`, `DOSIS`, `FECHAFIN`, `FECHAINICIO`, `INDICACIONES`, `MEDICAMENTO_ID`, `MEDICO_ID`, `PACIENTE_ID`) VALUES
+(1, 3, '2018-01-26', '2017-12-01', 'Tomar con mucho cuidado la pastilla. Ha causado accidentes graves.', 1, 2, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `RECETA`
+--
+
+CREATE TABLE `RECETA` (
+  `ID` bigint(20) NOT NULL,
+  `CANTIDAD` int(11) DEFAULT NULL,
+  `ESTADORECETA` varchar(20) DEFAULT NULL,
+  `FINVALIDEZ` date DEFAULT NULL,
+  `INICIOVALIDEZ` date DEFAULT NULL,
+  `FARMACIADISPENSADORA_ID` bigint(20) DEFAULT NULL,
+  `PRESCRIPCION_ID` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `USUARIO_GEN`
+--
+
+CREATE TABLE `USUARIO_GEN` (
+  `GEN_NAME` varchar(50) NOT NULL,
+  `GEN_VAL` decimal(38,0) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `USUARIO_GEN`
+--
+
+INSERT INTO `USUARIO_GEN` (`GEN_NAME`, `GEN_VAL`) VALUES
+('USUARIO_GEN', '100');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `ADMINISTRADOR`
+--
+ALTER TABLE `ADMINISTRADOR`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `CENTROSALUD`
+--
+ALTER TABLE `CENTROSALUD`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `CITA`
+--
+ALTER TABLE `CITA`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `FK_CITA_PACIENTE_ID` (`PACIENTE_ID`),
+  ADD KEY `FK_CITA_MEDICO_ID` (`MEDICO_ID`);
+
+--
+-- Indexes for table `FARMACIA`
+--
+ALTER TABLE `FARMACIA`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `MEDICAMENTO`
+--
+ALTER TABLE `MEDICAMENTO`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `MEDICO`
+--
+ALTER TABLE `MEDICO`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `FK_MEDICO_CENTROSALUD_ID` (`CENTROSALUD_ID`);
+
+--
+-- Indexes for table `PACIENTE`
+--
+ALTER TABLE `PACIENTE`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `FK_PACIENTE_MEDICO_ID` (`MEDICO_ID`);
+
+--
+-- Indexes for table `PRESCRIPCION`
+--
+ALTER TABLE `PRESCRIPCION`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `FK_PRESCRIPCION_MEDICO_ID` (`MEDICO_ID`),
+  ADD KEY `FK_PRESCRIPCION_PACIENTE_ID` (`PACIENTE_ID`),
+  ADD KEY `FK_PRESCRIPCION_MEDICAMENTO_ID` (`MEDICAMENTO_ID`);
+
+--
+-- Indexes for table `RECETA`
+--
+ALTER TABLE `RECETA`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `FK_RECETA_FARMACIADISPENSADORA_ID` (`FARMACIADISPENSADORA_ID`),
+  ADD KEY `FK_RECETA_PRESCRIPCION_ID` (`PRESCRIPCION_ID`);
+
+--
+-- Indexes for table `USUARIO_GEN`
+--
+ALTER TABLE `USUARIO_GEN`
+  ADD PRIMARY KEY (`GEN_NAME`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `CENTROSALUD`
+--
+ALTER TABLE `CENTROSALUD`
+  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `CITA`
+--
+ALTER TABLE `CITA`
+  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `MEDICAMENTO`
+--
+ALTER TABLE `MEDICAMENTO`
+  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `PRESCRIPCION`
+--
+ALTER TABLE `PRESCRIPCION`
+  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `RECETA`
+--
+ALTER TABLE `RECETA`
+  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `CITA`
+--
+ALTER TABLE `CITA`
+  ADD CONSTRAINT `FK_CITA_MEDICO_ID` FOREIGN KEY (`MEDICO_ID`) REFERENCES `MEDICO` (`ID`),
+  ADD CONSTRAINT `FK_CITA_PACIENTE_ID` FOREIGN KEY (`PACIENTE_ID`) REFERENCES `PACIENTE` (`ID`);
+
+--
+-- Constraints for table `MEDICO`
+--
+ALTER TABLE `MEDICO`
+  ADD CONSTRAINT `FK_MEDICO_CENTROSALUD_ID` FOREIGN KEY (`CENTROSALUD_ID`) REFERENCES `CENTROSALUD` (`ID`);
+
+--
+-- Constraints for table `PACIENTE`
+--
+ALTER TABLE `PACIENTE`
+  ADD CONSTRAINT `FK_PACIENTE_MEDICO_ID` FOREIGN KEY (`MEDICO_ID`) REFERENCES `MEDICO` (`ID`);
+
+--
+-- Constraints for table `PRESCRIPCION`
+--
+ALTER TABLE `PRESCRIPCION`
+  ADD CONSTRAINT `FK_PRESCRIPCION_MEDICAMENTO_ID` FOREIGN KEY (`MEDICAMENTO_ID`) REFERENCES `MEDICAMENTO` (`ID`),
+  ADD CONSTRAINT `FK_PRESCRIPCION_MEDICO_ID` FOREIGN KEY (`MEDICO_ID`) REFERENCES `MEDICO` (`ID`),
+  ADD CONSTRAINT `FK_PRESCRIPCION_PACIENTE_ID` FOREIGN KEY (`PACIENTE_ID`) REFERENCES `PACIENTE` (`ID`);
+
+--
+-- Constraints for table `RECETA`
+--
+ALTER TABLE `RECETA`
+  ADD CONSTRAINT `FK_RECETA_FARMACIADISPENSADORA_ID` FOREIGN KEY (`FARMACIADISPENSADORA_ID`) REFERENCES `FARMACIA` (`ID`),
+  ADD CONSTRAINT `FK_RECETA_PRESCRIPCION_ID` FOREIGN KEY (`PRESCRIPCION_ID`) REFERENCES `PRESCRIPCION` (`ID`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
