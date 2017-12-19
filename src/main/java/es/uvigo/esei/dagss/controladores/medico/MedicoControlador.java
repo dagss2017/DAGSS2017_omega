@@ -150,8 +150,9 @@ public class MedicoControlador implements Serializable {
 
     //Acciones
     public String doShowCita(Cita cita) {
+        Date fechaActual = new Date();
         // recuperar prescripciones del paciente asociado a la cita
-        List<Prescripcion> listaPrescripciones = prescripcionDAO.buscarPorPaciente(cita.getPaciente().getId());
+        List<Prescripcion> listaPrescripciones = prescripcionDAO.buscarPorPaciente(cita.getPaciente().getId(),fechaActual);
         if (listaPrescripciones != null) {
             prescripciones = listaPrescripciones;
         }

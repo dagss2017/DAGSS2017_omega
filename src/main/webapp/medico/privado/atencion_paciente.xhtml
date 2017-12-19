@@ -60,11 +60,17 @@
                     <!--   BOTÓN "CREAR PRESCRIPCION" AQUÍ, QUE ABRE UN MODAL CON EL FORMULARIO --> 
                     <b:button look="info" value="Nueva" onclick="$('.prescripcion-form').modal()" />
                        <b:modal id="amodal" title="Nueva prescripcion para el paciente : #{prescripcion.paciente.nombre}" styleClass="prescripcion-form">
-                       <p>Me gustan los paseos por la playa.</p>
-                       <f:facet name="footer">
+                        <h:outputText value="Fecha Fin" />
+                         <b:dateTimePicker useCurrent="true" format="MM/DD/YYYY"/>
+                        
+                        <h:outputText value="Dosis" />
+                        <b:inputText mask="numeric" value="" />
+                           
+                           <b:inputTextarea placeholder="Type something here..." value=""/>
+                        <f:facet name="footer">                  
                            <b:button value="Close" dismiss="modal" />
                            <b:button value="Ok" look="primary" dismiss="modal" />
-                       </f:facet>
+                        </f:facet>
                   </b:modal>
                 </h:form>
             </ui:define>
