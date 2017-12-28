@@ -5,9 +5,11 @@ package es.uvigo.esei.dagss.controladores.medico;
 
 import es.uvigo.esei.dagss.controladores.autenticacion.AutenticacionControlador;
 import es.uvigo.esei.dagss.dominio.daos.CitaDAO;
+import es.uvigo.esei.dagss.dominio.daos.MedicamentoDAO;
 import es.uvigo.esei.dagss.dominio.daos.MedicoDAO;
 import es.uvigo.esei.dagss.dominio.daos.PrescripcionDAO;
 import es.uvigo.esei.dagss.dominio.entidades.Cita;
+import es.uvigo.esei.dagss.dominio.entidades.Medicamento;
 import es.uvigo.esei.dagss.dominio.entidades.Medico;
 import es.uvigo.esei.dagss.dominio.entidades.Prescripcion;
 import es.uvigo.esei.dagss.dominio.entidades.TipoUsuario;
@@ -36,6 +38,7 @@ public class MedicoControlador implements Serializable {
     private String password;
     private List<Cita> citas;
     private List<Prescripcion> prescripciones;
+    private List<Medicamento> medicamentos;
 
     @Inject
     private AutenticacionControlador autenticacionControlador;
@@ -47,6 +50,8 @@ public class MedicoControlador implements Serializable {
     private CitaDAO citaDAO;
     @EJB
     private PrescripcionDAO prescripcionDAO;
+    @EJB
+    private MedicamentoDAO medicamentoDAO;
 
     /**
      * Creates a new instance of AdministradorControlador
@@ -101,6 +106,14 @@ public class MedicoControlador implements Serializable {
     public void setPrescripciones(List<Prescripcion> prescripciones) {
         this.prescripciones = prescripciones;
     }
+    
+    public List<Medicamento> getMedicamentos() {
+        return medicamentos;
+    }
+
+    public void setMedicamentos(List<Medicamento> medicamentos) {
+        this.medicamentos = medicamentos;
+    }
 
     private boolean parametrosAccesoInvalidos() {
         return (((dni == null) && (numeroColegiado == null)) || (password == null));
@@ -153,8 +166,12 @@ public class MedicoControlador implements Serializable {
         Date fechaActual = new Date();
         // recuperar prescripciones del paciente asociado a la cita
         List<Prescripcion> listaPrescripciones = prescripcionDAO.buscarPorPaciente(cita.getPaciente().getId(),fechaActual);
+        List<Medicamento> listaMedicamentos = medicamentoDAO.buscarTodos();
         if (listaPrescripciones != null) {
             prescripciones = listaPrescripciones;
+        }
+        if (listaMedicamentos != null) {
+            medicamentos = listaMedicamentos;
         }
         return "/medico/privado/atencion_paciente";
     }
