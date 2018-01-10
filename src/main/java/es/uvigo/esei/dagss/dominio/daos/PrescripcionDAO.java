@@ -31,4 +31,9 @@ public class PrescripcionDAO extends GenericoDAO<Prescripcion> {
         q.setParameter("fecha_actual", fechaActual);        
         return q.getResultList();
     }
+    
+      public Prescripcion crear(Prescripcion prescripcion) {
+        em.persist(prescripcion);
+        return prescripcion;
+    }
 }

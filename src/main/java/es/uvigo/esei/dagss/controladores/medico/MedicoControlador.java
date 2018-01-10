@@ -33,12 +33,17 @@ import javax.inject.Inject;
 public class MedicoControlador implements Serializable {
 
     private Medico medicoActual;
+    private Cita citaActual;
+    
     private String dni;
     private String numeroColegiado;
     private String password;
+    
     private List<Cita> citas;
     private List<Prescripcion> prescripciones;
     private List<Medicamento> medicamentos;
+    
+    private Prescripcion prescripcionActual = new Prescripcion();
 
     @Inject
     private AutenticacionControlador autenticacionControlador;
@@ -114,6 +119,14 @@ public class MedicoControlador implements Serializable {
     public void setMedicamentos(List<Medicamento> medicamentos) {
         this.medicamentos = medicamentos;
     }
+    
+    public Prescripcion getPrescripcionActual() {
+        return prescripcionActual;
+    }
+
+    public void setPrescripcionActual(Prescripcion prescripcionActual) {
+        this.prescripcionActual = prescripcionActual;
+    }
 
     private boolean parametrosAccesoInvalidos() {
         return (((dni == null) && (numeroColegiado == null)) || (password == null));
@@ -163,10 +176,14 @@ public class MedicoControlador implements Serializable {
 
     //Acciones
     public String doShowCita(Cita cita) {
+        
+        citaActual = cita;
+        
         Date fechaActual = new Date();
         // recuperar prescripciones del paciente asociado a la cita
         List<Prescripcion> listaPrescripciones = prescripcionDAO.buscarPorPaciente(cita.getPaciente().getId(),fechaActual);
         List<Medicamento> listaMedicamentos = medicamentoDAO.buscarTodos();
+        
         if (listaPrescripciones != null) {
             prescripciones = listaPrescripciones;
         }
@@ -174,5 +191,22 @@ public class MedicoControlador implements Serializable {
             medicamentos = listaMedicamentos;
         }
         return "/medico/privado/atencion_paciente";
+    }
+    
+    public String doAddPrescripcion() {
+        
+        Date fechaActual = new Date();
+        
+        prescripcionActual.setFechaInicio(fechaActual);
+        prescripcionActual.setPaciente(citaActual.getPaciente());
+        prescripcionActual.setMedico(citaActual.getMedico());
+        prescripcionDAO.crear(prescripcionActual);
+        
+        return doShowCita(citaActual);
+    }
+    
+        
+    public void setMedicamentoPrescripcion(Medicamento medicamento) {
+        prescripcionActual.setMedicamento(medicamento);
     }
 }
