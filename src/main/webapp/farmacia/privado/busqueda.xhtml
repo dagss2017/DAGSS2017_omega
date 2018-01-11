@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <body>
+
+        <ui:composition template="/plantillas/plantillaComun.xhtml">
+
+            <ui:define name="tituloPagina">
+                <h2> Página principal de Farmacias </h2>
+            </ui:define>            
+
+            <ui:define name="menu">
+                <ui:include src="/plantillas/menuComun.xhtml"/>
+            </ui:define>
+
+            <ui:define name="contenido">
+                <b:button look="info" value="Buscar paciente" onclick="$('.buscar-form').modal()" />
+                
+                         <!--    MODAL BUSCAR PACIENTE    -->
+                         <b:modal id="amodal-eliminar" title="Búscar paciente" styleClass="buscar-form" size="modal-sm">
+                             Paciente para pruebas: 
+                                DNI: 22222222B
+                                TS:2222222222 
+                                NSS: 2222222222222
+                        <h:form>
+                            
+                            <b:selectOneMenu value="#{farmaciaControlador.tipoQuery}" required="true" label="Selecciona criterio de búsqueda:">
+                             <f:selectItem itemLabel="(Porfavor selecciona)" itemValue="" />
+                             <f:selectItem itemLabel="DNI" itemValue="1" />
+                             <f:selectItem itemLabel="Tarjeta Sanitaria" itemValue="2" />
+                             <f:selectItem itemLabel="NSS" itemValue="3" />
+                           </b:selectOneMenu>
+                            <b:inputText placeholder="Escribe aqui el criterio...." value="#{farmaciaControlador.query}"/>
+                           
+                            <b:commandButton look="info" value="Buscar" action="#{farmaciaControlador.doBuscarPaciente()}"/>
+                            <b:button value="Close" dismiss="modal" />
+                            
+                        </h:form>
+                    </b:modal>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
