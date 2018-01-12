@@ -13,7 +13,7 @@
         <ui:composition template="/plantillas/plantillaComun.xhtml">
 
             <ui:define name="tituloPagina">
-                <h2>  Agenda de citas para hoy </h2>
+                <h2 style="margin-left: 10px">Agenda de citas para hoy </h2>
             </ui:define>            
 
             <ui:define name="menu">
@@ -21,7 +21,7 @@
             </ui:define>
 
             <ui:define name="contenido">
-                <h:form>
+                <h:form style="margin: 10px">
                     <b:dataTable value="#{medicoControlador.citas}"
                                  var="cita">
                         
@@ -50,10 +50,11 @@
                         <b:dataTableColumn value="#{cita.estado}" />
                           
                         
-                        <b:dataTableColumn label="Acción"> 
+                        <b:dataTableColumn orderable="false" label="Acción"> 
                              <b:row>
                                  <b:column span="3">
-                                     <b:commandButton value="Atender" action="#{medicoControlador.doShowCita(cita)}" look="info" size="sm" rendered="#{cita.estado=='PLANIFICADA'}"/>
+                                     <b:commandButton icon-awesome="stethoscope" value="Atender" action="#{medicoControlador.doShowCita(cita)}" look="info"
+                                                      size="sm" rendered="#{cita.estado=='PLANIFICADA'}"/>
                                  </b:column>
                              </b:row>
                          </b:dataTableColumn>

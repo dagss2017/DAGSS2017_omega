@@ -13,7 +13,9 @@
         <ui:composition template="/plantillas/plantillaComun.xhtml">
 
             <ui:define name="tituloPagina">
-                <h2>  Atención al paciente - prescripciones</h2>
+                <h2 style="margin-left: 10px">Atención al paciente - prescripciones</h2>
+                <!--    CAMBIO DE ESTADO DE LA CITA ACTUAL    -->
+                <ui:include src="cita/cambioEstadoCita.xhtml"/>
             </ui:define>            
 
             <ui:define name="menu">
@@ -21,7 +23,7 @@
             </ui:define>
 
             <ui:define name="contenido">
-                <h:form id="prescriptionsTableForm">
+                <h:form id="prescriptionsTableForm" style="margin: 10px">
                     <b:dataTable id="prescriptionsTable" value="#{medicoControlador.prescripciones}"
                                  var="prescripcion">
                         
@@ -71,13 +73,13 @@
                     <b:button look="info" value="Nueva" onclick="$('.crear-form').modal()" />
                 </h:form>
                 <!--    MODAL CREAR PRESCRIPCION    -->               
-                <ui:include src="crearPrescripcion.xhtml"/>
+                <ui:include src="prescripcion/crearPrescripcion.xhtml"/>
                     
                 <!--    MODAL EDITAR PRESCRIPCION    -->
-                <ui:include src="editarPrescripcion.xhtml"/>
+                <ui:include src="prescripcion/editarPrescripcion.xhtml"/>
                     
                 <!--    MODAL ELIMINAR PRESCRIPCION    -->
-                <ui:include src="eliminarPrescripcion.xhtml"/>
+                <ui:include src="prescripcion/eliminarPrescripcion.xhtml"/>
                 
                 <!--    MODAL PARA MOSTRAR INDICACIONES DE UNA PRESCRIPCION    -->
                 <h:form id="indicaciones-form">

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui">
+    <ui:composition>
+        <h:form style="margin-left: 10px">
+            <h4>Marcar cita como:</h4>
+            <b:commandButton icon-awesome="thumbs-up" look="success" tooltip="Marcar como completada" ajax="true" value="COMPLETADA"
+                                         actionListener="#{medicoControlador.doCambiarEstadoCitaActual('COMPLETADA')}"
+                                         oncomplete="$('.confirmar-modal').modal()" />
+            <b:commandButton icon-awesome="thumbs-down" style="margin-left: 5px" tooltip="Marcar como ausente" ajax="true" value="AUSENTE"
+                                         actionListener="#{medicoControlador.doCambiarEstadoCitaActual('AUSENTE')}"
+                                         oncomplete="$('.confirmar-modal').modal()" />
+            
+            <b:modal title="¿ Seguro que quiere cambiar el estado de la cita actual ?" styleClass="confirmar-modal">
+                <h:outputText value="Una vez marcada como COMPLETADA o AUSENTE,  esta cita no se podrá volver a consultar." />
+                <f:facet name="footer">
+                    <b:commandButton look="warning" value="OK" oncomplete="$('.confirmar-modal').modal('hide')"
+                                 action="#{medicoControlador.doEditarCita()}"/>
+                    <b:button value="Cancelar" dismiss="modal"/>
+                </f:facet>
+            </b:modal>
+        </h:form>
+    </ui:composition>
+</html>

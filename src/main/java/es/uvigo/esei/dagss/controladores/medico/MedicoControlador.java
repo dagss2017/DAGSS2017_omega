@@ -9,6 +9,7 @@ import es.uvigo.esei.dagss.dominio.daos.MedicamentoDAO;
 import es.uvigo.esei.dagss.dominio.daos.MedicoDAO;
 import es.uvigo.esei.dagss.dominio.daos.PrescripcionDAO;
 import es.uvigo.esei.dagss.dominio.entidades.Cita;
+import es.uvigo.esei.dagss.dominio.entidades.EstadoCita;
 import es.uvigo.esei.dagss.dominio.entidades.Medicamento;
 import es.uvigo.esei.dagss.dominio.entidades.Medico;
 import es.uvigo.esei.dagss.dominio.entidades.Prescripcion;
@@ -184,6 +185,10 @@ public class MedicoControlador implements Serializable {
     }
 
     //Acciones
+    public String doShowAgenda() {
+        return "/medico/privado/agenda";
+    }
+    
     public String doShowCita(Cita cita) {
         
         citaActual = cita;
@@ -268,6 +273,23 @@ public class MedicoControlador implements Serializable {
         else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Introduzca el medicamento a prescribir", ""));
         }
+    }
+    
+    public void doCambiarEstadoCitaActual(String estado) {
+        switch(estado) {
+            case "COMPLETADA":
+                citaActual.setEstado(EstadoCita.COMPLETADA);
+                break;
+            case "AUSENTE":
+                citaActual.setEstado(EstadoCita.AUSENTE);
+                break;
+        }
+    }
+    
+    public String doEditarCita() {
+        citaDAO.actualizar(citaActual);
+        citaActual=null;
+        return doShowAgenda();
     }
 
 }
