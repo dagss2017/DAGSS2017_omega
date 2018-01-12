@@ -19,39 +19,63 @@
             </ui:define>
 
             <ui:define name="contenido">
-                <b:dataTable value="#{farmaciaControlador.recetasPaciente}" var="receta">
-                    
-                            <b:dataTableColumn label="Médico"> 
-                                <h:outputText value ="#{receta.prescripcion.medico.nombre}"/>
-                            </b:dataTableColumn>
-                    
-                            <b:dataTableColumn label="Medicamento"> 
-                                <h:outputText value ="#{receta.prescripcion.medicamento.nombre}"/>
-                            </b:dataTableColumn>
-                    
-                            <b:dataTableColumn label="Cantidad"> 
-                                <h:outputText value ="#{receta.cantidad}"/>
-                            </b:dataTableColumn>
-                        
-                            <b:dataTableColumn label="Fecha Inicio"> 
-                              <h:outputText value="#{receta.inicioValidez}" >
-                                <f:convertDateTime pattern="d-M-yyyy" />
-                              </h:outputText>
-                            </b:dataTableColumn>
-                    
-                            <b:dataTableColumn label="Fecha Fin"> 
-                              <h:outputText value="#{receta.finValidez}" >
-                                <f:convertDateTime pattern="d-M-yyyy" />
-                              </h:outputText>
-                            </b:dataTableColumn>
-                    
-                            <b:dataTableColumn label="Estado"> 
-                                <h:outputText value ="#{receta.estadoReceta}"/>
-                            </b:dataTableColumn>
-                    </b:dataTable>
-         
-            </ui:define>
+                <h:form>
+                    <b:dataTable value="#{farmaciaControlador.recetasPaciente}" var="receta">
 
+                                <b:dataTableColumn label="Médico"> 
+                                    <h:outputText value ="#{receta.prescripcion.medico.nombre}"/>
+                                </b:dataTableColumn>
+
+                                <b:dataTableColumn label="Medicamento"> 
+                                    <h:outputText value ="#{receta.prescripcion.medicamento.nombre}"/>
+                                </b:dataTableColumn>
+
+                                <b:dataTableColumn label="Cantidad"> 
+                                    <h:outputText value ="#{receta.cantidad}"/>
+                                </b:dataTableColumn>
+
+                                <b:dataTableColumn label="Fecha Inicio"> 
+                                  <h:outputText value="#{receta.inicioValidez}" >
+                                    <f:convertDateTime pattern="d-M-yyyy" />
+                                  </h:outputText>
+                                </b:dataTableColumn>
+
+                                <b:dataTableColumn label="Fecha Fin"> 
+                                  <h:outputText value="#{receta.finValidez}" >
+                                    <f:convertDateTime pattern="d-M-yyyy" />
+                                  </h:outputText>
+                                </b:dataTableColumn>
+
+                                <b:dataTableColumn label="Estado"> 
+                                    <h:outputText value ="#{receta.estadoReceta}"/>
+                                </b:dataTableColumn>
+
+                                <b:dataTableColumn label="Acción"> 
+                                    <b:button look="warning" value="Servir" onclick="$('.servir-form').modal()" size="sm" rendered="#{receta.estado=='GENERADA'}" />
+                                </b:dataTableColumn>
+                        </b:dataTable>
+                    </h:form>
+                    <b:modal id="amodal" styleClass="servir-form" title="Servir receta para el paciente : #{farmaciaControlador.pacienteActual.dni}">
+                            <h:form>
+                                   <b:dataTable page-length="5" pageLengthMenu="5"  value="#{farmaciaControlador.farmacias}"
+                                        var="farmacia" select="true" selectionMode="single" ajax='true'
+                                        onselect="ajax:farmaciaControlador.setFarmaciaActual(farmacia)">
+                                       <b:dataTableColumn label="NIF"> 
+                                            <h:outputText value="#{farmacia.nif}" />
+                                       </b:dataTableColumn>
+                                        <b:dataTableColumn label="Nombre"> 
+                                            <h:outputText value="#{farmacia.nombreFarmacia}" />
+                                        </b:dataTableColumn>
+                                       <b:dataTableColumn label="Localización"> 
+                                            <h:outputText value="#{farmacia.direccion.provincia}, #{farmacia.direccion.localidad}" />
+                                        </b:dataTableColumn>
+                                   </b:dataTable>
+                               <b:commandButton look="warning" value="Crear" oncomplete="$('#amodal.modal('hide))" action="#{farmaciaControlador.doServirRecetas()}"/>
+                               <b:button value="Close" dismiss="modal" />
+                            </h:form>
+                   </b:modal>
+            </ui:define>
+           
         </ui:composition>
 
     </body>

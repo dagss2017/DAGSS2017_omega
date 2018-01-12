@@ -7,6 +7,7 @@ import es.uvigo.esei.dagss.controladores.autenticacion.AutenticacionControlador;
 import es.uvigo.esei.dagss.dominio.daos.FarmaciaDAO;
 import es.uvigo.esei.dagss.dominio.daos.PacienteDAO;
 import es.uvigo.esei.dagss.dominio.daos.PrescripcionDAO;
+import es.uvigo.esei.dagss.dominio.daos.RecetaDAO;
 import es.uvigo.esei.dagss.dominio.entidades.Farmacia;
 import es.uvigo.esei.dagss.dominio.entidades.Paciente;
 import es.uvigo.esei.dagss.dominio.entidades.Prescripcion;
@@ -32,24 +33,19 @@ import javax.inject.Inject;
 @SessionScoped
 public class FarmaciaControlador implements Serializable {
 
-    private Farmacia farmaciaActual;
+  
     private String nif;
     private String password;
     private String query;
     private String tipoQuery;
 
+    private Farmacia farmaciaActual;
     private Paciente pacienteActual;
+    private Receta recetaActual;
+
     private List<Prescripcion> prescripcionesPaciente;
-
     private List<Receta> recetasPaciente;
-
-    public List<Receta> getRecetasPaciente() {
-        return recetasPaciente;
-    }
-
-    public void setRecetasPaciente(List<Receta> recetasPaciente) {
-        this.recetasPaciente = recetasPaciente;
-    }
+    private List<Farmacia> farmacias;
 
     @Inject
     private AutenticacionControlador autenticacionControlador;
@@ -63,6 +59,8 @@ public class FarmaciaControlador implements Serializable {
     @EJB
     private PrescripcionDAO prescripcionDAO;
 
+    @EJB
+    private RecetaDAO recetaDAO;
     /**
      * Creates a new instance of AdministradorControlador
      */
@@ -128,6 +126,30 @@ public class FarmaciaControlador implements Serializable {
     private boolean parametrosAccesoInvalidos() {
         return ((nif == null) || (password == null));
     }
+    
+        public List<Farmacia> getFarmacias() {
+        return farmacias;
+    }
+
+    public void setFarmacias(List<Farmacia> farmacias) {
+        this.farmacias = farmacias;
+    }
+
+    public List<Receta> getRecetasPaciente() {
+        return recetasPaciente;
+    }
+
+    public void setRecetasPaciente(List<Receta> recetasPaciente) {
+        this.recetasPaciente = recetasPaciente;
+    }
+    
+    public Receta getRecetaActual() {
+        return recetaActual;
+    }
+
+    public void setRecetaActual(Receta recetaActual) {
+        this.recetaActual = recetaActual;
+    }
 
     public String doLogin() {
         String destino = null;
@@ -168,6 +190,7 @@ public class FarmaciaControlador implements Serializable {
             if (pacienteActual != null) {
                 prescripcionesPaciente();
                 recetasPaciente();
+                farmacias();
                 destino = "/farmacia/privado/receta_paciente";
 
             } else {
@@ -184,6 +207,11 @@ public class FarmaciaControlador implements Serializable {
         prescripcionesPaciente = prescripcionDAO.buscarPorPaciente(pacienteActual.getId(), fechaActual);
 
     }
+    public void farmacias(){
+        List<Farmacia> f = new ArrayList<>();
+        f = farmaciaDAO.buscarTodos();
+        farmacias = f;
+    }
 
     public void recetasPaciente() {
         List<Receta> recetas = new ArrayList<>();
@@ -199,6 +227,11 @@ public class FarmaciaControlador implements Serializable {
         }
 
         recetasPaciente = recetas;
+    }
+    
+    public void doServirRecetas(){
+        recetaActual.setFarmaciaDispensadora(farmaciaActual);
+        recetaDAO.actualizar(recetaActual);
     }
 
 }
