@@ -11,11 +11,11 @@ and open the template in the editor.
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:b="http://bootsfaces.net/ui">
     <ui:composition>
-        <b:modal id="amodal" title="Nueva prescripcion para el paciente : #{prescripcion.paciente.nombre}" styleClass="crear-form">
-            <h:form>
+        <h:form>
+            <b:modal id="crear-modal" title="Nueva prescripcion para el paciente : #{prescripcion.paciente.nombre}" styleClass="crear-form">
                 <b:dataTable page-length="5" pageLengthMenu="5"  value="#{medicoControlador.medicamentos}"
                              var="medicamento" select="true" selectionMode="single" ajax='true'
-                             onselect="ajax:medicoControlador.setMedicamentoPrescripcion(medicamento)">
+                             onselect="ajax:medicoControlador.setMedicamentoActual(medicamento)">
                     <b:dataTableColumn label="Nombre"> 
                         <h:outputText value="#{medicamento.nombre}" />
                     </b:dataTableColumn>
@@ -36,9 +36,11 @@ and open the template in the editor.
 
                 <b:inputTextarea placeholder="Indicaciones" value="#{medicoControlador.prescripcionActual.indicaciones}"/>
 
-                <b:commandButton look="info" value="Crear" oncomplete="$('#amodal.modal('hide))" action="#{medicoControlador.doAddPrescripcion()}"/>
-                 <b:button value="Close" dismiss="modal" />
-            </h:form>
-        </b:modal>
+                <b:commandButton look="info" value="Crear" oncomplete="$('#crear-modal.modal('hide))"
+                                 ajax="true" process="@form" update=":prescriptionsTableForm:prescriptionsTable"
+                                 actionListener="#{medicoControlador.doAddPrescripcion()}"/>
+                <b:button value="Close" dismiss="modal"/>
+            </b:modal>
+        </h:form>
     </ui:composition>
 </html>

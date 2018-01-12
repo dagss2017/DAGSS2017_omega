@@ -44,6 +44,7 @@ public class MedicoControlador implements Serializable {
     private List<Medicamento> medicamentos;
     
     private Prescripcion prescripcionActual = new Prescripcion();
+    private Prescripcion prescripcionSeleccionada = new Prescripcion();
 
     @Inject
     private AutenticacionControlador autenticacionControlador;
@@ -127,6 +128,14 @@ public class MedicoControlador implements Serializable {
     public void setPrescripcionActual(Prescripcion prescripcionActual) {
         this.prescripcionActual = prescripcionActual;
     }
+    
+    public Prescripcion getPrescripcionSeleccionada() {
+        return prescripcionSeleccionada;
+    }
+
+    public void setPrescripcionSeleccionada(Prescripcion prescripcionSeleccionada) {
+        this.prescripcionSeleccionada = prescripcionSeleccionada;
+    }
 
     private boolean parametrosAccesoInvalidos() {
         return (((dni == null) && (numeroColegiado == null)) || (password == null));
@@ -193,21 +202,72 @@ public class MedicoControlador implements Serializable {
         return "/medico/privado/atencion_paciente";
     }
     
-    public String doAddPrescripcion() {
-        
-        Date fechaActual = new Date();
-        
-        prescripcionActual.setFechaInicio(fechaActual);
-        prescripcionActual.setPaciente(citaActual.getPaciente());
-        prescripcionActual.setMedico(citaActual.getMedico());
-        prescripcionDAO.crear(prescripcionActual);
-        prescripcionActual = new Prescripcion();
-        
-        return doShowCita(citaActual);
-    }
-    
-        
-    public void setMedicamentoPrescripcion(Medicamento medicamento) {
+    public void setMedicamentoActual(Medicamento medicamento) {
         prescripcionActual.setMedicamento(medicamento);
     }
+    
+    public void setMedicamentoEditar(Medicamento medicamento) {
+        prescripcionSeleccionada.setMedicamento(medicamento);
+    }
+    
+    public void doAddPrescripcion() {
+        if(prescripcionActual.getMedicamento()!=null) {
+            if(prescripcionActual.getFechaFin() != null) {
+                if(prescripcionActual.getDosis() != null){
+                    Date fechaActual = new Date();
+                    prescripcionActual.setFechaInicio(fechaActual);
+                    prescripcionActual.setPaciente(citaActual.getPaciente());
+                    prescripcionActual.setMedico(citaActual.getMedico());
+                    prescripcionDAO.crear(prescripcionActual);
+                    prescripciones = prescripcionDAO.buscarPorPaciente(citaActual.getPaciente().getId(),fechaActual);
+                    prescripcionActual = new Prescripcion();
+                }
+                else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Introduzca la dosis diaria", ""));
+                }
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Introduzca la fecha de fin", ""));
+            }
+        }
+        else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Introduzca el medicamento a prescribir", ""));
+        }
+    }
+    
+    public void seleccionarPrescripcion(Prescripcion prescripcion) {
+        prescripcionSeleccionada = prescripcion;
+        System.out.println(prescripcionSeleccionada.getMedicamento().getNombre());
+    }
+    
+    public void doEliminarPrescripcion() {
+        prescripcionDAO.eliminar(prescripcionSeleccionada);
+        Date fechaActual = new Date();
+        prescripciones = prescripcionDAO.buscarPorPaciente(citaActual.getPaciente().getId(),fechaActual);
+        prescripcionSeleccionada = new Prescripcion();
+    }
+    
+    public void doEditarPrescripcion() {
+        if(prescripcionSeleccionada.getMedicamento()!=null) {
+            if(prescripcionSeleccionada.getFechaFin() != null) {
+                if(prescripcionSeleccionada.getDosis() != null){
+                    Date fechaActual = new Date();
+                    prescripcionSeleccionada.setFechaInicio(fechaActual);
+                    prescripcionSeleccionada.setPaciente(citaActual.getPaciente());
+                    prescripcionSeleccionada.setMedico(citaActual.getMedico());
+                    prescripcionDAO.actualizar(prescripcionSeleccionada);
+                    prescripciones = prescripcionDAO.buscarPorPaciente(citaActual.getPaciente().getId(),fechaActual);
+                    prescripcionSeleccionada = new Prescripcion();
+                }
+                else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Introduzca la dosis diaria", ""));
+                }
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Introduzca la fecha de fin", ""));
+            }
+        }
+        else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Introduzca el medicamento a prescribir", ""));
+        }
+    }
+
 }

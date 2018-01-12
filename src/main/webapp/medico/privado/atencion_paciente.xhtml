@@ -21,9 +21,9 @@
             </ui:define>
 
             <ui:define name="contenido">
-                <h:form>
-                    <b:dataTable id="prescriptionsTable" value="#{medicoControlador.prescripciones}" select="true"
-                                 selectionMode="single" var="prescripcion">
+                <h:form id="prescriptionsTableForm">
+                    <b:dataTable id="prescriptionsTable" value="#{medicoControlador.prescripciones}"
+                                 var="prescripcion">
                         
                         <b:dataTableColumn label="Medicamento"> 
                             <h:outputText value ="#{prescripcion.medicamento.nombre} "/>
@@ -56,12 +56,19 @@
                             <f:convertDateTime pattern="d-M-yyyy" />
                           </h:outputText>
                         </b:dataTableColumn>
+                        
+                        <b:dataTableColumn orderable="false" label="Opciones">
+                            <b:commandButton icon-awesome="comments" tooltip="Indicaciones" ajax="true"
+                                             actionListener="#{medicoControlador.seleccionarPrescripcion(prescripcion)}"
+                                             update=":indicaciones-form:indicaciones-modal" oncomplete="$('.indicaciones-modal').modal()" />
+                            <b:commandButton icon-awesome="pencil" tooltip="Editar" actionListener="#{medicoControlador.seleccionarPrescripcion(prescripcion)}"
+                                             update=":editar-form:editar-modal" oncomplete="$('.editar-form').modal()" />
+                            <b:commandButton look="danger" icon-awesome="trash-o" tooltip="Eliminar" actionListener="#{medicoControlador.seleccionarPrescripcion(prescripcion)}"
+                                             update=":eliminar-form:eliminar-modal" oncomplete="$('.eliminar-form').modal()" />
+                        </b:dataTableColumn>
                     </b:dataTable>
-                    <!--   BOTONES CREAR, EDITAR Y ELIMINAR PRESCRIPCION -->
+                    <!--   BOTON CREAR PRESCRIPCION -->
                     <b:button look="info" value="Nueva" onclick="$('.crear-form').modal()" />
-                    <b:button look="warning" value="Editar" 
-                              onclick="if(#{medicoControlador.prescripcionActual.id==1}) $('.editar-form').modal()" />
-                    <b:button look="danger" value="Eliminar" onclick="$('.eliminar-form').modal()" />
                 </h:form>
                 <!--    MODAL CREAR PRESCRIPCION    -->               
                 <ui:include src="crearPrescripcion.xhtml"/>
@@ -71,6 +78,17 @@
                     
                 <!--    MODAL ELIMINAR PRESCRIPCION    -->
                 <ui:include src="eliminarPrescripcion.xhtml"/>
+                
+                <!--    MODAL PARA MOSTRAR INDICACIONES DE UNA PRESCRIPCION    -->
+                <h:form id="indicaciones-form">
+                    <b:modal id="indicaciones-modal" title="Indicaciones : " styleClass="indicaciones-modal">
+                        <h:outputText value="#{medicoControlador.prescripcionSeleccionada.indicaciones!=''?
+                                               medicoControlador.prescripcionSeleccionada.indicaciones:'Sin indicaciones.'}" />
+                        <f:facet name="footer">
+                            <b:button value="Cerrar" dismiss="modal"/>
+                        </f:facet>
+                    </b:modal>
+                </h:form>
                     
             </ui:define>
         </ui:composition>

@@ -11,34 +11,45 @@ and open the template in the editor.
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:b="http://bootsfaces.net/ui">
     <ui:composition>
-        <b:modal id="amodal-eliminar" title="Eliminar prescripcion para el paciente : #{prescripcion.paciente.nombre}" styleClass="eliminar-form">
-            <h:form>
-                <b:dataTable page-length="5" pageLengthMenu="5"  value="#{medicoControlador.medicamentos}"
-                             var="medicamento" select="true" selectionMode="single" ajax='true'
-                             onselect="ajax:medicoControlador.setMedicamentoPrescripcion(medicamento)">
-                    <b:dataTableColumn label="Nombre">
-                        <h:outputText value="#{medicamento.nombre}" />
-                    </b:dataTableColumn>
-                    <b:dataTableColumn label="Principio Act."> 
-                        <h:outputText value="#{medicamento.principioActivo}" />
-                    </b:dataTableColumn>
-                    <b:dataTableColumn label="Fabricante"> 
-                        <h:outputText value="#{medicamento.fabricante}" />
-                    </b:dataTableColumn>
-                    <b:dataTableColumn label="Familia"> 
-                        <h:outputText value="#{medicamento.familia}" />
-                    </b:dataTableColumn>
-                </b:dataTable>
+        <h:form id="eliminar-form">
+            <b:modal id="eliminar-modal" title="¿ Eliminar la prescripcion ?" styleClass="eliminar-form">
+                <b:inputText span="12" value="#{medicoControlador.prescripcionSeleccionada.medicamento.nombre}" label="Medicamento">
+                    <f:facet name="prepend">
+                        <h:outputText value="Nombre" />
+                    </f:facet>
+                </b:inputText>
+                <b:inputText span="6" value="#{medicoControlador.prescripcionSeleccionada.medicamento.principioActivo}">
+                    <f:facet name="prepend">
+                        <h:outputText value="Principio Activo" />
+                    </f:facet>
+                </b:inputText>
+                <b:inputText span="6" value="#{medicoControlador.prescripcionSeleccionada.medicamento.familia}">
+                    <f:facet name="prepend">
+                        <h:outputText value="Familia" />
+                    </f:facet>
+                </b:inputText>
+                <b:inputText span="6" value="#{medicoControlador.prescripcionSeleccionada.medicamento.fabricante}">
+                    <f:facet name="prepend">
+                        <h:outputText value="Fabricante" />
+                    </f:facet>
+                </b:inputText>
+                <b:inputText span="6" value="#{medicoControlador.prescripcionSeleccionada.medicamento.numeroDosis}">
+                    <f:facet name="prepend">
+                        <h:outputText value="Numero dosis" />
+                    </f:facet>
+                </b:inputText>
 
-                <b:dateTimePicker label="Fecha Fin" span="6" useCurrent="true" format="MM/DD/YYYY" value="#{medicoControlador.prescripcionActual.fechaFin}"/>
+                <b:dateTimePicker readonly="true" label="Fecha Fin" span="6" useCurrent="true" format="MM/DD/YYYY" value="#{medicoControlador.prescripcionSeleccionada.fechaFin}"/>
 
-                <b:touchSpin id="dosis" label="Dosis" col-md="6" value="#{medicoControlador.prescripcionActual.dosis}" min="1" max="200" step="1"/>
+                <b:touchSpin disabled="true" readonly="true" id="dosis" label="Dosis diarias" col-md="6" value="#{medicoControlador.prescripcionSeleccionada.dosis}" min="1" max="200" step="1"/>
 
-                <b:inputTextarea placeholder="Indicaciones" value="#{medicoControlador.prescripcionActual.indicaciones}"/>
+                <b:inputTextarea readonly="true" placeholder="Indicaciones" value="#{medicoControlador.prescripcionSeleccionada.indicaciones}"/>
 
-                <b:commandButton look="info" value="Crear" oncomplete="$('#amodal.modal('hide))" action="#{medicoControlador.doAddPrescripcion()}"/>
-                 <b:button value="Close" dismiss="modal" />
-            </h:form>
-        </b:modal>
+                <b:commandButton look="info" value="Eliminar" oncomplete="$('#eliminar-modal.modal('hide))"
+                                 ajax="true" process="@form" update=":prescriptionsTableForm:prescriptionsTable"
+                                 actionListener="#{medicoControlador.doEliminarPrescripcion()}"/>
+                <b:button value="Cancelar" dismiss="modal" />
+            </b:modal>
+        </h:form>
     </ui:composition>
 </html>

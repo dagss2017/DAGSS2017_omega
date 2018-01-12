@@ -11,12 +11,15 @@ and open the template in the editor.
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:b="http://bootsfaces.net/ui">
     <ui:composition>
-        <b:modal id="amodal-editar" title="Editar prescripcion para el paciente : #{prescripcion.paciente.nombre}" styleClass="editar-form">
-            <h:form>
+        <h:form id="editar-form">
+            <b:modal id="editar-modal" title="Editar prescripcion para el paciente : #{prescripcion.paciente.nombre}" styleClass="editar-form">
+                <b:messages/>
+                    <p>Medicamento actual: #{medicoControlador.prescripcionSeleccionada.medicamento.nombre}</p>
+                <b:messages/>
                 <b:dataTable page-length="5" pageLengthMenu="5"  value="#{medicoControlador.medicamentos}"
                              var="medicamento" select="true" selectionMode="single" ajax='true'
-                             onselect="ajax:medicoControlador.setMedicamentoPrescripcion(medicamento)">
-                    <b:dataTableColumn label="Nombre">
+                             onselect="ajax:medicoControlador.setMedicamentoEditar(medicamento)">
+                    <b:dataTableColumn label="Nombre"> 
                         <h:outputText value="#{medicamento.nombre}" />
                     </b:dataTableColumn>
                     <b:dataTableColumn label="Principio Act."> 
@@ -30,15 +33,17 @@ and open the template in the editor.
                     </b:dataTableColumn>
                 </b:dataTable>
 
-                <b:dateTimePicker label="Fecha Fin" span="6" useCurrent="true" format="MM/DD/YYYY" value="#{medicoControlador.prescripcionActual.fechaFin}"/>
+                <b:dateTimePicker label="Fecha Fin" span="6" useCurrent="true" format="MM/DD/YYYY" value="#{medicoControlador.prescripcionSeleccionada.fechaFin}"/>
 
-                <b:touchSpin id="dosis" label="Dosis" col-md="6" value="#{medicoControlador.prescripcionActual.dosis}" min="1" max="200" step="1"/>
+                <b:touchSpin id="dosis" label="Dosis" col-md="6" value="#{medicoControlador.prescripcionSeleccionada.dosis}" min="1" max="200" step="1"/>
 
-                <b:inputTextarea placeholder="Indicaciones" value="#{medicoControlador.prescripcionActual.indicaciones}"/>
+                <b:inputTextarea placeholder="Indicaciones" value="#{medicoControlador.prescripcionSeleccionada.indicaciones}"/>
 
-                <b:commandButton look="info" value="Crear" oncomplete="$('#amodal.modal('hide))" action="#{medicoControlador.doAddPrescripcion()}"/>
-                 <b:button value="Close" dismiss="modal" />
-            </h:form>
-        </b:modal>
+                <b:commandButton look="info" value="Guardar" oncomplete="$('#editar-modal.modal('hide))"
+                                 ajax="true" process="@form" update=":prescriptionsTableForm:prescriptionsTable"
+                                 actionListener="#{medicoControlador.doEditarPrescripcion()}"/>
+                <b:button value="Descartar" dismiss="modal"/>
+            </b:modal>
+        </h:form>
     </ui:composition>
 </html>
