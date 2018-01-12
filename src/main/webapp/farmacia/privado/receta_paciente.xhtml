@@ -10,7 +10,7 @@
         <ui:composition template="/plantillas/plantillaComun.xhtml">
 
             <ui:define name="tituloPagina">
-                <h2> Página principal de Farmacias </h2>
+                <h2> Página principal de las recetas del paciente: #{farmaciaControlador.pacienteActual.dni}</h2>
             </ui:define>            
 
             <ui:define name="menu">
@@ -18,9 +18,7 @@
             </ui:define>
 
             <ui:define name="contenido">
-                <ul>
-                    <li> <h:link outcome="/farmacia/privado/busqueda" value="Pacientes"/> </li>
-                </ul>
+         
             </ui:define>
 
         </ui:composition>
