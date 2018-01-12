@@ -6,12 +6,19 @@ package es.uvigo.esei.dagss.controladores.farmacia;
 import es.uvigo.esei.dagss.controladores.autenticacion.AutenticacionControlador;
 import es.uvigo.esei.dagss.dominio.daos.FarmaciaDAO;
 import es.uvigo.esei.dagss.dominio.daos.PacienteDAO;
+import es.uvigo.esei.dagss.dominio.daos.PrescripcionDAO;
 import es.uvigo.esei.dagss.dominio.entidades.Farmacia;
 import es.uvigo.esei.dagss.dominio.entidades.Paciente;
+import es.uvigo.esei.dagss.dominio.entidades.Prescripcion;
+import es.uvigo.esei.dagss.dominio.entidades.Receta;
 import es.uvigo.esei.dagss.dominio.entidades.TipoUsuario;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -30,18 +37,31 @@ public class FarmaciaControlador implements Serializable {
     private String password;
     private String query;
     private String tipoQuery;
-    
+
     private Paciente pacienteActual;
+    private List<Prescripcion> prescripcionesPaciente;
+
+    private List<Receta> recetasPaciente;
+
+    public List<Receta> getRecetasPaciente() {
+        return recetasPaciente;
+    }
+
+    public void setRecetasPaciente(List<Receta> recetasPaciente) {
+        this.recetasPaciente = recetasPaciente;
+    }
 
     @Inject
     private AutenticacionControlador autenticacionControlador;
 
     @EJB
     private FarmaciaDAO farmaciaDAO;
-    
+
     @EJB
     private PacienteDAO pacienteDAO;
 
+    @EJB
+    private PrescripcionDAO prescripcionDAO;
 
     /**
      * Creates a new instance of AdministradorControlador
@@ -72,7 +92,7 @@ public class FarmaciaControlador implements Serializable {
     public void setFarmaciaActual(Farmacia farmaciaActual) {
         this.farmaciaActual = farmaciaActual;
     }
-    
+
     public String getQuery() {
         return query;
     }
@@ -88,13 +108,21 @@ public class FarmaciaControlador implements Serializable {
     public void setTipoQuery(String tipoQuery) {
         this.tipoQuery = tipoQuery;
     }
-    
+
     public Paciente getPacienteActual() {
         return pacienteActual;
     }
 
     public void setPacienteActual(Paciente pacienteActual) {
         this.pacienteActual = pacienteActual;
+    }
+
+    public List<Prescripcion> getPrescripcionesPaciente() {
+        return prescripcionesPaciente;
+    }
+
+    public void setPrescripcionesPaciente(List<Prescripcion> prescripcionesPaciente) {
+        this.prescripcionesPaciente = prescripcionesPaciente;
     }
 
     private boolean parametrosAccesoInvalidos() {
@@ -122,19 +150,55 @@ public class FarmaciaControlador implements Serializable {
         }
         return destino;
     }
-    
+
     public String doBuscarPaciente() {
-        switch(tipoQuery) {
-            case "1":
-                pacienteActual = pacienteDAO.buscarPorDNI(query);
-                break;
-            case "2":
-                pacienteActual = pacienteDAO.buscarPorTarjetaSanitaria(query);
-                break;
-            case "3":
-                pacienteActual = pacienteDAO.buscarPorNumeroSeguridadSocial(query);
-                break;
+        String destino = null;
+        if (!tipoQuery.equals("")) {
+            switch (tipoQuery) {
+                case "dni":
+                    pacienteActual = pacienteDAO.buscarPorDNI(query);
+                    break;
+                case "ts":
+                    pacienteActual = pacienteDAO.buscarPorTarjetaSanitaria(query);
+                    break;
+                case "nss":
+                    pacienteActual = pacienteDAO.buscarPorNumeroSeguridadSocial(query);
+                    break;
+            }
+            if (pacienteActual != null) {
+                prescripcionesPaciente();
+                recetasPaciente();
+                destino = "/farmacia/privado/receta_paciente";
+
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No existe paciente con "+tipoQuery+": " + query, ""));
+            }
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Es necesario un criterio de búsqueda ",""));
         }
-        return "/farmacia/privado/receta_paciente";
+        return destino;
     }
+
+    public void prescripcionesPaciente() {
+        Date fechaActual = new Date();
+        prescripcionesPaciente = prescripcionDAO.buscarPorPaciente(pacienteActual.getId(), fechaActual);
+
+    }
+
+    public void recetasPaciente() {
+        List<Receta> recetas = new ArrayList<>();
+
+        Iterator<Prescripcion> itP = prescripcionesPaciente.iterator();
+
+        while (itP.hasNext()) {
+            Iterator<Receta> itR = itP.next().getRecetas().iterator();
+
+            while (itR.hasNext()) {
+                recetas.add(itR.next());
+            }
+        }
+
+        recetasPaciente = recetas;
+    }
+
 }
