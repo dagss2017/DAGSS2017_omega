@@ -29,11 +29,11 @@
                                 NSS: 2222222222222
                         <h:form>
                             
-                            <b:selectOneMenu value="#{farmaciaControlador.tipoQuery}" required="true" label="Selecciona criterio de búsqueda:">
+                            <b:selectOneMenu value="#{farmaciaControlador.tipoQuery}" label="Selecciona criterio de búsqueda:">
                              <f:selectItem itemLabel="(Porfavor selecciona)" itemValue="" />
-                             <f:selectItem itemLabel="DNI" itemValue="1" />
-                             <f:selectItem itemLabel="Tarjeta Sanitaria" itemValue="2" />
-                             <f:selectItem itemLabel="NSS" itemValue="3" />
+                             <f:selectItem itemLabel="DNI" itemValue="dni" />
+                             <f:selectItem itemLabel="Tarjeta Sanitaria" itemValue="ts" />
+                             <f:selectItem itemLabel="NSS" itemValue="nss" />
                            </b:selectOneMenu>
                             <b:inputText placeholder="Escribe aqui el criterio...." value="#{farmaciaControlador.query}"/>
                            
