@@ -8,6 +8,7 @@ import es.uvigo.esei.dagss.dominio.daos.FarmaciaDAO;
 import es.uvigo.esei.dagss.dominio.daos.PacienteDAO;
 import es.uvigo.esei.dagss.dominio.daos.PrescripcionDAO;
 import es.uvigo.esei.dagss.dominio.daos.RecetaDAO;
+import es.uvigo.esei.dagss.dominio.entidades.EstadoReceta;
 import es.uvigo.esei.dagss.dominio.entidades.Farmacia;
 import es.uvigo.esei.dagss.dominio.entidades.Paciente;
 import es.uvigo.esei.dagss.dominio.entidades.Prescripcion;
@@ -33,7 +34,6 @@ import javax.inject.Inject;
 @SessionScoped
 public class FarmaciaControlador implements Serializable {
 
-  
     private String nif;
     private String password;
     private String query;
@@ -45,7 +45,6 @@ public class FarmaciaControlador implements Serializable {
 
     private List<Prescripcion> prescripcionesPaciente;
     private List<Receta> recetasPaciente;
-    private List<Farmacia> farmacias;
 
     @Inject
     private AutenticacionControlador autenticacionControlador;
@@ -61,6 +60,7 @@ public class FarmaciaControlador implements Serializable {
 
     @EJB
     private RecetaDAO recetaDAO;
+
     /**
      * Creates a new instance of AdministradorControlador
      */
@@ -126,14 +126,6 @@ public class FarmaciaControlador implements Serializable {
     private boolean parametrosAccesoInvalidos() {
         return ((nif == null) || (password == null));
     }
-    
-        public List<Farmacia> getFarmacias() {
-        return farmacias;
-    }
-
-    public void setFarmacias(List<Farmacia> farmacias) {
-        this.farmacias = farmacias;
-    }
 
     public List<Receta> getRecetasPaciente() {
         return recetasPaciente;
@@ -142,7 +134,7 @@ public class FarmaciaControlador implements Serializable {
     public void setRecetasPaciente(List<Receta> recetasPaciente) {
         this.recetasPaciente = recetasPaciente;
     }
-    
+
     public Receta getRecetaActual() {
         return recetaActual;
     }
@@ -190,14 +182,13 @@ public class FarmaciaControlador implements Serializable {
             if (pacienteActual != null) {
                 prescripcionesPaciente();
                 recetasPaciente();
-                farmacias();
                 destino = "/farmacia/privado/receta_paciente";
 
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No existe paciente con "+tipoQuery+": " + query, ""));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No existe paciente con " + tipoQuery + ": " + query, ""));
             }
         } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Es necesario un criterio de búsqueda ",""));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Es necesario un criterio de búsqueda ", ""));
         }
         return destino;
     }
@@ -206,11 +197,6 @@ public class FarmaciaControlador implements Serializable {
         Date fechaActual = new Date();
         prescripcionesPaciente = prescripcionDAO.buscarPorPaciente(pacienteActual.getId(), fechaActual);
 
-    }
-    public void farmacias(){
-        List<Farmacia> f = new ArrayList<>();
-        f = farmaciaDAO.buscarTodos();
-        farmacias = f;
     }
 
     public void recetasPaciente() {
@@ -228,10 +214,21 @@ public class FarmaciaControlador implements Serializable {
 
         recetasPaciente = recetas;
     }
-    
-    public void doServirRecetas(){
-        recetaActual.setFarmaciaDispensadora(farmaciaActual);
-        recetaDAO.actualizar(recetaActual);
+
+    public void doServirRecetas() {
+        if (recetaActual != null) {
+
+            if (recetaActual.getEstado().equals(EstadoReceta.GENERADA)) {
+
+                recetaActual.setFarmaciaDispensadora(farmaciaActual);
+                recetaActual.setEstado(EstadoReceta.SERVIDA);
+                recetaDAO.actualizarReceta(recetaActual);
+            } else {    
+                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Receta anulada o ya servida " ,""));
+            }
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Es necesario una receta",""));
+        }
     }
 
 }
