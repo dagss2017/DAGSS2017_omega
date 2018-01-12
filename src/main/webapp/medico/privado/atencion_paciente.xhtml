@@ -57,102 +57,21 @@
                           </h:outputText>
                         </b:dataTableColumn>
                     </b:dataTable>
-                    <!--   BOTONES CREAR, EDITAR Y ELIMINAR PRESCRIPCION --> 
-                    <b:button look="info" value="Nueva" onclick="$('.prescripcion-form').modal()" />
+                    <!--   BOTONES CREAR, EDITAR Y ELIMINAR PRESCRIPCION -->
+                    <b:button look="info" value="Nueva" onclick="$('.crear-form').modal()" />
                     <b:button look="warning" value="Editar" 
                               onclick="if(#{medicoControlador.prescripcionActual.id==1}) $('.editar-form').modal()" />
                     <b:button look="danger" value="Eliminar" onclick="$('.eliminar-form').modal()" />
                 </h:form>
-                    <!--    MODAL CREAR PRESCRIPCION    -->
-                    <b:modal id="amodal" title="Nueva prescripcion para el paciente : #{prescripcion.paciente.nombre}" styleClass="prescripcion-form">
-                        <h:form>
-                            <b:dataTable page-length="5" pageLengthMenu="5"  value="#{medicoControlador.medicamentos}"
-                                         var="medicamento" select="true" selectionMode="single" ajax='true'
-                                         onselect="ajax:medicoControlador.setMedicamentoPrescripcion(medicamento)">
-                                <b:dataTableColumn label="Nombre"> 
-                                    <h:outputText value="#{medicamento.nombre}" />
-                                </b:dataTableColumn>
-                                <b:dataTableColumn label="Principio Act."> 
-                                    <h:outputText value="#{medicamento.principioActivo}" />
-                                </b:dataTableColumn>
-                                <b:dataTableColumn label="Fabricante"> 
-                                    <h:outputText value="#{medicamento.fabricante}" />
-                                </b:dataTableColumn>
-                                <b:dataTableColumn label="Familia"> 
-                                    <h:outputText value="#{medicamento.familia}" />
-                                </b:dataTableColumn>
-                            </b:dataTable>
-                            
-                            <b:dateTimePicker label="Fecha Fin" span="6" useCurrent="true" format="MM/DD/YYYY" value="#{medicoControlador.prescripcionActual.fechaFin}"/>
-   
-                            <b:touchSpin id="dosis" label="Dosis" col-md="6" value="#{medicoControlador.prescripcionActual.dosis}" min="1" max="200" step="1"/>
-
-                            <b:inputTextarea placeholder="Indicaciones" value="#{medicoControlador.prescripcionActual.indicaciones}"/>
-                            
-                            <b:commandButton look="info" value="Crear" oncomplete="$('#amodal.modal('hide))" action="#{medicoControlador.doAddPrescripcion()}"/>
-                             <b:button value="Close" dismiss="modal" />
-                        </h:form>
-                    </b:modal>
-                    <!--    MODAL EDITAR PRESCRIPCION    -->
-                    <b:modal id="amodal-editar" title="Editar prescripcion para el paciente : #{prescripcion.paciente.nombre}" styleClass="editar-form">
-                        <h:form>
-                            <b:dataTable page-length="5" pageLengthMenu="5"  value="#{medicoControlador.medicamentos}"
-                                         var="medicamento" select="true" selectionMode="single" ajax='true'
-                                         onselect="ajax:medicoControlador.setMedicamentoPrescripcion(medicamento)">
-                                <b:dataTableColumn label="Nombre">
-                                    <h:outputText value="#{medicamento.nombre}" />
-                                </b:dataTableColumn>
-                                <b:dataTableColumn label="Principio Act."> 
-                                    <h:outputText value="#{medicamento.principioActivo}" />
-                                </b:dataTableColumn>
-                                <b:dataTableColumn label="Fabricante"> 
-                                    <h:outputText value="#{medicamento.fabricante}" />
-                                </b:dataTableColumn>
-                                <b:dataTableColumn label="Familia"> 
-                                    <h:outputText value="#{medicamento.familia}" />
-                                </b:dataTableColumn>
-                            </b:dataTable>
-                            
-                            <b:dateTimePicker label="Fecha Fin" span="6" useCurrent="true" format="MM/DD/YYYY" value="#{medicoControlador.prescripcionActual.fechaFin}"/>
-   
-                            <b:touchSpin id="dosis" label="Dosis" col-md="6" value="#{medicoControlador.prescripcionActual.dosis}" min="1" max="200" step="1"/>
-
-                            <b:inputTextarea placeholder="Indicaciones" value="#{medicoControlador.prescripcionActual.indicaciones}"/>
-                            
-                            <b:commandButton look="info" value="Crear" oncomplete="$('#amodal.modal('hide))" action="#{medicoControlador.doAddPrescripcion()}"/>
-                             <b:button value="Close" dismiss="modal" />
-                        </h:form>
-                    </b:modal>
-                    <!--    MODAL ELIMINAR PRESCRIPCION    -->
-                    <b:modal id="amodal-eliminar" title="Eliminar prescripcion para el paciente : #{prescripcion.paciente.nombre}" styleClass="eliminar-form">
-                        <h:form>
-                            <b:dataTable page-length="5" pageLengthMenu="5"  value="#{medicoControlador.medicamentos}"
-                                         var="medicamento" select="true" selectionMode="single" ajax='true'
-                                         onselect="ajax:medicoControlador.setMedicamentoPrescripcion(medicamento)">
-                                <b:dataTableColumn label="Nombre">
-                                    <h:outputText value="#{medicamento.nombre}" />
-                                </b:dataTableColumn>
-                                <b:dataTableColumn label="Principio Act."> 
-                                    <h:outputText value="#{medicamento.principioActivo}" />
-                                </b:dataTableColumn>
-                                <b:dataTableColumn label="Fabricante"> 
-                                    <h:outputText value="#{medicamento.fabricante}" />
-                                </b:dataTableColumn>
-                                <b:dataTableColumn label="Familia"> 
-                                    <h:outputText value="#{medicamento.familia}" />
-                                </b:dataTableColumn>
-                            </b:dataTable>
-                            
-                            <b:dateTimePicker label="Fecha Fin" span="6" useCurrent="true" format="MM/DD/YYYY" value="#{medicoControlador.prescripcionActual.fechaFin}"/>
-   
-                            <b:touchSpin id="dosis" label="Dosis" col-md="6" value="#{medicoControlador.prescripcionActual.dosis}" min="1" max="200" step="1"/>
-
-                            <b:inputTextarea placeholder="Indicaciones" value="#{medicoControlador.prescripcionActual.indicaciones}"/>
-                            
-                            <b:commandButton look="info" value="Crear" oncomplete="$('#amodal.modal('hide))" action="#{medicoControlador.doAddPrescripcion()}"/>
-                             <b:button value="Close" dismiss="modal" />
-                        </h:form>
-                    </b:modal>
+                <!--    MODAL CREAR PRESCRIPCION    -->               
+                <ui:include src="crearPrescripcion.xhtml"/>
+                    
+                <!--    MODAL EDITAR PRESCRIPCION    -->
+                <ui:include src="editarPrescripcion.xhtml"/>
+                    
+                <!--    MODAL ELIMINAR PRESCRIPCION    -->
+                <ui:include src="eliminarPrescripcion.xhtml"/>
+                    
             </ui:define>
         </ui:composition>
 
