@@ -10,19 +10,26 @@ import es.uvigo.esei.dagss.dominio.daos.MedicoDAO;
 import es.uvigo.esei.dagss.dominio.daos.PrescripcionDAO;
 import es.uvigo.esei.dagss.dominio.entidades.Cita;
 import es.uvigo.esei.dagss.dominio.entidades.EstadoCita;
+import es.uvigo.esei.dagss.dominio.entidades.EstadoReceta;
 import es.uvigo.esei.dagss.dominio.entidades.Medicamento;
 import es.uvigo.esei.dagss.dominio.entidades.Medico;
 import es.uvigo.esei.dagss.dominio.entidades.Prescripcion;
+import es.uvigo.esei.dagss.dominio.entidades.Receta;
 import es.uvigo.esei.dagss.dominio.entidades.TipoUsuario;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 /**
  *
@@ -215,14 +222,17 @@ public class MedicoControlador implements Serializable {
         prescripcionSeleccionada.setMedicamento(medicamento);
     }
     
+    // Crear una prescripcion
     public void doAddPrescripcion() {
         if(prescripcionActual.getMedicamento()!=null) {
-            if(prescripcionActual.getFechaFin() != null) {
+            Date fechaActual = new Date();
+            if( prescripcionActual.getFechaFin() != null &&
+                    (prescripcionActual.getFechaFin().after(fechaActual)) ) {
                 if(prescripcionActual.getDosis() != null){
-                    Date fechaActual = new Date();
                     prescripcionActual.setFechaInicio(fechaActual);
                     prescripcionActual.setPaciente(citaActual.getPaciente());
                     prescripcionActual.setMedico(citaActual.getMedico());
+                    prescripcionActual.setRecetas(doPlanRecetas());
                     prescripcionDAO.crear(prescripcionActual);
                     prescripciones = prescripcionDAO.buscarPorPaciente(citaActual.getPaciente().getId(),fechaActual);
                     prescripcionActual = new Prescripcion();
@@ -231,7 +241,7 @@ public class MedicoControlador implements Serializable {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Introduzca la dosis diaria", ""));
                 }
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Introduzca la fecha de fin", ""));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Introduzca una fecha de fin válida", ""));
             }
         }
         else {
@@ -239,11 +249,53 @@ public class MedicoControlador implements Serializable {
         }
     }
     
-    public void seleccionarPrescripcion(Prescripcion prescripcion) {
-        prescripcionSeleccionada = prescripcion;
-        System.out.println(prescripcionSeleccionada.getMedicamento().getNombre());
+    // Crear plan de recetas de la prescripcion a crear
+    public List<Receta> doPlanRecetas() {
+        List<Receta> recetas = new ArrayList<Receta>();
+        int diasRestantes = calcularDiasPrescripcion();
+        int dosisDiarias = prescripcionActual.getDosis();
+        int dosisCaja = prescripcionActual.getMedicamento().getNumeroDosis();
+        int dosisTotales = dosisDiarias * diasRestantes;
+        int numRecetas = diasRestantes/7 + ((diasRestantes%7 == 0)?0:1); // 1 receta por semana
+        // Primera receta con fecha de inicio de validez = fecha de inicio de la prescripcion
+        int dosisSobrantes = 0;
+        int dosisReceta = dosisDiarias * ((diasRestantes<7)?diasRestantes:7) - dosisSobrantes;
+        int numCajasReceta = dosisReceta/dosisCaja + ((dosisReceta%dosisCaja==0)?0:1);
+        Date fechaInicioValidezReceta = prescripcionActual.getFechaInicio();
+        recetas.add(new Receta(prescripcionActual, numCajasReceta, fechaInicioValidezReceta, sumarDias(fechaInicioValidezReceta, 7), EstadoReceta.GENERADA));
+        dosisSobrantes = dosisReceta%dosisCaja;
+        diasRestantes -= 7;
+        // Resto de recetas
+        for(int i=1; i<numRecetas; i++) {
+            dosisReceta = dosisDiarias * ((diasRestantes<7)?diasRestantes:7) - dosisSobrantes;
+            numCajasReceta = dosisReceta/dosisCaja + ((dosisReceta%dosisCaja==0)?0:1);
+            recetas.add(new Receta(prescripcionActual, numCajasReceta, fechaInicioValidezReceta, sumarDias(fechaInicioValidezReceta, 14), EstadoReceta.GENERADA));
+            dosisSobrantes = dosisReceta%dosisCaja;
+            fechaInicioValidezReceta = sumarDias(fechaInicioValidezReceta, 7);
+            diasRestantes -= 7;
+        }
+        return recetas;
     }
     
+    public static Date sumarDias(Date fecha, int dias) {
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(fecha);
+		cal.add(Calendar.DATE, dias);
+				
+		return cal.getTime();
+    }
+    
+    private int calcularDiasPrescripcion() {
+        DateTime fechaInicio = new DateTime(prescripcionActual.getFechaInicio());
+        DateTime fechaFin = new DateTime(prescripcionActual.getFechaFin());
+        return Days.daysBetween(fechaInicio, fechaFin).getDays();
+    }
+    
+    public void seleccionarPrescripcion(Prescripcion prescripcion) {
+        prescripcionSeleccionada = prescripcion;
+    }
+    
+    // Eliminar una prescripcion
     public void doEliminarPrescripcion() {
         prescripcionDAO.eliminar(prescripcionSeleccionada);
         Date fechaActual = new Date();
@@ -251,11 +303,13 @@ public class MedicoControlador implements Serializable {
         prescripcionSeleccionada = new Prescripcion();
     }
     
+    // Editar una prescripcion
     public void doEditarPrescripcion() {
         if(prescripcionSeleccionada.getMedicamento()!=null) {
-            if(prescripcionSeleccionada.getFechaFin() != null) {
+            Date fechaActual = new Date();
+            if(prescripcionSeleccionada.getFechaFin() != null &&
+                    (prescripcionSeleccionada.getFechaFin().after(fechaActual) ) ) {
                 if(prescripcionSeleccionada.getDosis() != null){
-                    Date fechaActual = new Date();
                     prescripcionSeleccionada.setFechaInicio(fechaActual);
                     prescripcionSeleccionada.setPaciente(citaActual.getPaciente());
                     prescripcionSeleccionada.setMedico(citaActual.getMedico());
@@ -275,6 +329,7 @@ public class MedicoControlador implements Serializable {
         }
     }
     
+    // Cambiar el estado de una cita
     public void doCambiarEstadoCitaActual(String estado) {
         switch(estado) {
             case "COMPLETADA":

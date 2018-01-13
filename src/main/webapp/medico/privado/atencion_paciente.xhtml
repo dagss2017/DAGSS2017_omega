@@ -13,6 +13,7 @@
         <ui:composition template="/plantillas/plantillaComun.xhtml">
 
             <ui:define name="tituloPagina">
+                <b:navLink style="margin-left: 10px" icon-awesome="hand-o-left" outcome="/medico/privado/agenda" value="Agenda"/>
                 <h2 style="margin-left: 10px">Atención al paciente - prescripciones</h2>
                 <!--    CAMBIO DE ESTADO DE LA CITA ACTUAL    -->
                 <ui:include src="cita/cambioEstadoCita.xhtml"/>
@@ -60,8 +61,7 @@
                         </b:dataTableColumn>
                         
                         <b:dataTableColumn orderable="false" label="Opciones">
-                            <b:commandButton icon-awesome="comments" tooltip="Indicaciones" ajax="true"
-                                             actionListener="#{medicoControlador.seleccionarPrescripcion(prescripcion)}"
+                            <b:commandButton icon-awesome="comments" tooltip="Indicaciones" actionListener="#{medicoControlador.seleccionarPrescripcion(prescripcion)}"
                                              update=":indicaciones-form:indicaciones-modal" oncomplete="$('.indicaciones-modal').modal()" />
                             <b:commandButton icon-awesome="pencil" tooltip="Editar" actionListener="#{medicoControlador.seleccionarPrescripcion(prescripcion)}"
                                              update=":editar-form:editar-modal" oncomplete="$('.editar-form').modal()" />
@@ -70,7 +70,7 @@
                         </b:dataTableColumn>
                     </b:dataTable>
                     <!--   BOTON CREAR PRESCRIPCION -->
-                    <b:button look="info" value="Nueva" onclick="$('.crear-form').modal()" />
+                    <b:button look="info" value="Nueva prescripción" onclick="$('.crear-form').modal()" />
                 </h:form>
                 <!--    MODAL CREAR PRESCRIPCION    -->               
                 <ui:include src="prescripcion/crearPrescripcion.xhtml"/>

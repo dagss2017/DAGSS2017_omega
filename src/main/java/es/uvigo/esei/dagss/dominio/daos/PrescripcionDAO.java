@@ -32,7 +32,7 @@ public class PrescripcionDAO extends GenericoDAO<Prescripcion> {
         return q.getResultList();
     }
     
-      public Prescripcion crear(Prescripcion prescripcion) {
+    public Prescripcion crear(Prescripcion prescripcion) {
         em.persist(prescripcion);
         return prescripcion;
     }
