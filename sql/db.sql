@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `CITA` (
 
 INSERT INTO `CITA` (`ID`, `DURACION`, `ESTADO`, `FECHA`, `HORA`, `MEDICO_ID`, `PACIENTE_ID`) VALUES
 (1, 15, 'PLANIFICADA', '2017-11-23', '09:00:00', 2, 3),
-(2, 20, 'PLANIFICADA', '2018-01-11', '09:00:00', 2, 3),
+(2, 20, 'PLANIFICADA', '2018-01-14', '09:00:00', 2, 3),
 (3, 30, 'ANULADA', '2018-01-11', '12:00:00', 2, 3),
 (4, 10, 'AUSENTE', '2018-01-02', '14:20:00', 2, 3),
 (5, 45, 'COMPLETADA', '2018-01-02', '20:00:00', 2, 3);
@@ -140,10 +140,20 @@ CREATE TABLE IF NOT EXISTS `MEDICAMENTO` (
 --
 
 INSERT INTO `MEDICAMENTO` (`ID`, `FABRICANTE`, `FAMILIA`, `NOMBRE`, `NUMERODOSIS`, `PRINCIPIOACTIVO`) VALUES
-(1, 'Fortex', 'Autoset', 'WeeklyIbuprofen', 3, 'CoreInside'),
-(2, 'Bayern', 'Chetilog', 'SDXC', 23, 'Legopina'),
-(3, 'MayusX', 'Gnitrack', 'UltraGing', 7, 'Acesulfame'),
-(4, 'Animals', 'Opiaceos', 'EnergyUltra', 1, 'Niacina');
+(1, 'UCB PHARMA', 'Ansiolitico, antihistaminico', 'Atarax', 32, 'Hidroxicina'),
+(2, 'GLAXOSMITHKLINE', 'Antibiotico', 'Augmentine', 12, 'Amoxicilina y acido clabulanico'),
+(3, 'AVENTIS PHARMA', 'Antibiotico', 'Rhodogil', 6, 'Espiramicina y metronidazol'),
+(4, 'SANOFI AVENTIS S.A.', 'Diuretico', 'Seguril', 24, 'Furosemida'),
+(5, 'BOEHRINGER INGELHEIM S.A.', 'Analgesico, antipiretico', 'Nolotil', 18, 'Metamizol'),
+(6, 'MYLAN PHARMACEUTICALS', 'Analgesico, antiinflamatorio', 'Neobrufen', 32, 'Ibuprofeno'),
+(7, 'ALCALA FARMA S.L.', 'Analgesico, antipiretico', 'Termalgin', 24, 'Paracetamol'),
+(8, 'MYLAN PHARMACEUTICALS', 'Analgesico, antiinflamatorio', 'Dalsy', 32, 'Ibuprofeno'),
+(9, 'CINFA', 'Antiinflamatorio', 'Cortef', 16, 'Hidrocortisona'),
+(10, 'MERCK, SHARP AND DOHME', 'Bifosfonato', 'Fosamax', 20, 'Alendronato sodico'),
+(11, 'ROCHE PHARMA', 'Bifosfonato', 'Bonviva', 12, 'Ibandronato'),
+(12, 'Laboratorios VIR', 'Antihipertensivo', 'Zabart', 18, 'Amlodipino'),
+(13, 'CINFA', 'Antitusigeno', 'Cinfatos', 24, 'Dextrometorfano'),
+(14, 'Bayer', 'Analgesico, antipiretico', 'Aspirina', 32, 'Acido Acetil Salicilico');
 
 -- --------------------------------------------------------
 
