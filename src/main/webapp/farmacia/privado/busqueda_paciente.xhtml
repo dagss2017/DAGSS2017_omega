@@ -11,7 +11,7 @@
         <ui:composition template="/plantillas/plantillaComun.xhtml">
 
             <ui:define name="tituloPagina">
-                <h2> Página principal de Farmacias </h2>
+                <h2 style="margin-left: 10px"> Página principal de Farmacias </h2>
             </ui:define>            
 
             <ui:define name="menu">
@@ -19,7 +19,7 @@
             </ui:define>
 
             <ui:define name="contenido">
-                <b:button look="info" value="Buscar paciente" onclick="$('.buscar-form').modal()" />
+                <b:button look="info" value="Buscar paciente" onclick="$('.buscar-form').modal()" style="margin: 10px" />
                 
                          <!--    MODAL BUSCAR PACIENTE    -->
                          <b:modal id="amodal-eliminar" title="Búscar paciente" styleClass="buscar-form" size="modal-sm">
@@ -38,7 +38,7 @@
                             <b:inputText placeholder="Escribe aqui el criterio...." value="#{farmaciaControlador.query}"/>
                            
                             <b:commandButton look="info" value="Buscar" action="#{farmaciaControlador.doBuscarPaciente()}"/>
-                            <b:button value="Close" dismiss="modal" />
+                            <b:button value="Close" dismiss="modal" style="margin-left: 5px" />
                             
                         </h:form>
                     </b:modal>

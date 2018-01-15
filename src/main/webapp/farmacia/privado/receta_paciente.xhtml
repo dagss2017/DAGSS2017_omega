@@ -19,7 +19,7 @@
             </ui:define>
 
             <ui:define name="contenido">
-                <h:form>
+                <h:form style="margin: 10px">
                     <b:dataTable value="#{farmaciaControlador.recetasPaciente}" var="receta"
                                  select="true" selectionMode="single" ajax='true'
                                  onselect="ajax:farmaciaControlador.setRecetaActual(receta)">
@@ -52,8 +52,8 @@
                                     <h:outputText value ="#{receta.estadoReceta}"/>
                                 </b:dataTableColumn>
                         </b:dataTable>
+                        <b:button look="warning" value="Servir" onclick="$('.servir-form').modal()" size="sm"/>
                     </h:form>
-                <b:button look="warning" value="Servir" onclick="$('.servir-form').modal()" size="sm"/>
                     <b:modal id="amodal" styleClass="servir-form" title="¿Desea servir esta receta?">
                             <h:form>
                                <b:commandButton look="warning" value="Servir" oncomplete="$('#amodal.modal('hide))" action="#{farmaciaControlador.doServirRecetas()}"/>

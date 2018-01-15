@@ -13,37 +13,32 @@ and open the template in the editor.
     <ui:composition>
         <h:form id="eliminar-form">
             <b:modal id="eliminar-modal" title="¿ Eliminar la prescripcion ?" styleClass="eliminar-form">
-                <b:inputText span="12" value="#{medicoControlador.prescripcionSeleccionada.medicamento.nombre}" label="Medicamento">
+                <b:inputText readonly="true" span="12" value="#{medicoControlador.prescripcionSeleccionada.medicamento.nombre}" label="Medicamento">
                     <f:facet name="prepend">
                         <h:outputText value="Nombre" />
                     </f:facet>
                 </b:inputText>
-                <b:inputText span="6" value="#{medicoControlador.prescripcionSeleccionada.medicamento.principioActivo}">
+                <b:inputText readonly="true" span="12" value="#{medicoControlador.prescripcionSeleccionada.medicamento.principioActivo}">
                     <f:facet name="prepend">
                         <h:outputText value="Principio Activo" />
                     </f:facet>
                 </b:inputText>
-                <b:inputText span="6" value="#{medicoControlador.prescripcionSeleccionada.medicamento.familia}">
+                <b:inputText readonly="true" span="12" value="#{medicoControlador.prescripcionSeleccionada.medicamento.familia}">
                     <f:facet name="prepend">
                         <h:outputText value="Familia" />
                     </f:facet>
                 </b:inputText>
-                <b:inputText span="6" value="#{medicoControlador.prescripcionSeleccionada.medicamento.fabricante}">
+                <b:inputText readonly="true" span="12" value="#{medicoControlador.prescripcionSeleccionada.medicamento.fabricante}">
                     <f:facet name="prepend">
                         <h:outputText value="Fabricante" />
-                    </f:facet>
-                </b:inputText>
-                <b:inputText span="6" value="#{medicoControlador.prescripcionSeleccionada.medicamento.numeroDosis}">
-                    <f:facet name="prepend">
-                        <h:outputText value="Numero dosis" />
                     </f:facet>
                 </b:inputText>
 
                 <b:dateTimePicker readonly="true" label="Fecha Fin" span="6" useCurrent="true" format="MM/DD/YYYY" value="#{medicoControlador.prescripcionSeleccionada.fechaFin}"/>
 
-                <b:touchSpin disabled="true" readonly="true" id="dosis" label="Dosis diarias" col-md="6" value="#{medicoControlador.prescripcionSeleccionada.dosis}" min="1" max="200" step="1"/>
+                <b:inputText readonly="true" label="Dosis diarias" span="6" value="#{medicoControlador.prescripcionSeleccionada.dosis}"/>
 
-                <b:inputTextarea readonly="true" placeholder="Indicaciones" value="#{medicoControlador.prescripcionSeleccionada.indicaciones}"/>
+                <b:inputTextarea readonly="true" label="Indicaciones" value="#{medicoControlador.prescripcionSeleccionada.indicaciones}"/>
 
                 <b:commandButton look="info" value="Eliminar" oncomplete="$('#eliminar-modal.modal('hide))"
                                  ajax="true" process="@form" update=":prescriptionsTableForm:prescriptionsTable"
